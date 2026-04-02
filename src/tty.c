@@ -34,7 +34,6 @@ void terminal_putentryat(char c, uint8_t color, size_t x, size_t y) {
 }
 
 void terminal_putchar(char c) {
-
   if (c == '\n') {
     terminal_row++;
     terminal_column = 0;
