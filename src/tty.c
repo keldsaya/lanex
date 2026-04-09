@@ -1,4 +1,5 @@
 #include "vga.h"
+#include "cursor.h"
 #include "tty.h"
 
 size_t terminal_row;
@@ -14,6 +15,7 @@ static size_t strlen(const char *str) {
 }
 
 void terminal_initialize(void) {
+  cursor_enable(14,15);
   terminal_row = 0;
   terminal_column = 0;
   terminal_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
@@ -35,6 +37,7 @@ void terminal_scroll() {
 void terminal_putentryat(char c, uint8_t color, size_t x, size_t y) {
   const size_t index = y * VGA_WIDTH + x;
   terminal_buffer[index] = vga_entry(c, color);
+  cursor_update(x, y);
 }
 
 void terminal_putchar(char c) {

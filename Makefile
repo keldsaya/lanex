@@ -1,31 +1,36 @@
-LINKER := ./linker.ld
-SRC_DIR := ./src
-INCLUDE_DIR := ./include
-BUILD_DIR := ./build
-ISO_DIR := ./isodir
-OUT_BIN := $(BUILD_DIR)/kernel.bin
-ISO := ./lanex.iso
+CC = i686-elf-gcc
+AS = i686-elf-as
+NASM = nasm
+CFLAGS = -Iinclude -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+LDFLAGS = -T linker.ld -ffreestanding -O2 -nostdlib -lgcc -Wl,--oformat,binary
 
-OBJECTS := $(BUILD_DIR)/boot.o $(BUILD_DIR)/main.o $(BUILD_DIR)/vga.o $(BUILD_DIR)/tty.o
+BUILD_DIR = build
+SRC_DIR = src
 
-all: $(OUT_BIN)
-	cp $(OUT_BIN) $(ISO_DIR)/boot/kernel.bin
-	grub-mkrescue -o $(ISO) isodir
+OBJS = $(BUILD_DIR)/main.o $(BUILD_DIR)/io.o $(BUILD_DIR)/vga.o $(BUILD_DIR)/tty.o $(BUILD_DIR)/cursor.o
+OUT_BIN = $(BUILD_DIR)/kernel.bin
+IMG = lanex.img
 
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.s
-	i686-elf-as $< -o $@
+all: $(IMG)
+
+$(IMG): $(OUT_BIN)
+	$(NASM) -f bin $(SRC_DIR)/boot.asm -o $(BUILD_DIR)/boot.bin
+	cat $(BUILD_DIR)/boot.bin $(OUT_BIN) > $(IMG)
+	truncate -s 1440k $(IMG)
+
+$(OUT_BIN): $(OBJS)
+	$(CC) $(LDFLAGS) -o $@ $(OBJS)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
-	i686-elf-gcc -c $< -o $@ -I$(INCLUDE_DIR) -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+	$(CC) $(CFLAGS) -c $< -o $@
 
-$(OUT_BIN): $(OBJECTS)
-	i686-elf-gcc -T $(LINKER) -o $@ -ffreestanding -O2 -nostdlib $^ -lgcc
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.s
+	$(AS) $< -o $@
 
 run:
-	qemu-system-x86_64 -cdrom $(ISO)
+	qemu-system-i386 -drive file=$(IMG),format=raw,index=0,media=disk
 
 clean:
-	rm -f $(BUILD_DIR)/*.o $(BUILD_DIR)/*.bin
-	rm -f $(ISO)
+	rm -rf $(BUILD_DIR)/*.o $(BUILD_DIR)/*.bin $(IMG)
 
-.PHONY: all run clean
+.PHONY: all clean run
