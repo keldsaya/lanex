@@ -19,12 +19,15 @@ $(IMG): $(OUT_BIN)
 	truncate -s 1440k $(IMG)
 
 $(OUT_BIN): $(OBJS)
+	mkdir -p $(BUILD_DIR)
 	$(CC) $(LDFLAGS) -o $@ $(OBJS)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	mkdir -p $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.s
+	mkdir -p $(BUILD_DIR)
 	$(AS) $< -o $@
 
 run:
