@@ -32,7 +32,7 @@ void keyboard_handler() {
     } else if(scancode == 0x39) {
       terminal_putchar(' ');
     } else if(scancode == 0x0E) {
-      terminal_writestring("[BS]");
+      terminal_putchar('\b');
     } else if(scancode < 128) {
       char c = shift_pressed ? upper_scancodes[scancode] : lower_scancodes[scancode];
       if(c > 0) { terminal_putchar(c); }
