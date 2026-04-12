@@ -5,5 +5,6 @@ extern char lower_scancodes[128];
 extern char upper_scancodes[128];
 
 void keyboard_handler();
+char keyboard_get_char();
 
 #endif /* H_KEYBOARD */
