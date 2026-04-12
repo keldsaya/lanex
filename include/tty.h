@@ -9,11 +9,13 @@ extern size_t tty_column;
 extern uint8_t tty_color;
 extern uint16_t *tty_buffer;
 
+void tty_clear();
 void tty_initialize(void);
 void tty_setcolor(uint8_t color); 
 void tty_putentryat(char c, uint8_t color, size_t x, size_t y);
 void tty_putchar(char c);
 void tty_write(const char *data, size_t size);
 void tty_writestring(const char *data);
+char tty_last_char();
 
 #endif

@@ -14,18 +14,21 @@ static size_t strlen(const char *str) {
   return len;
 }
 
-void tty_initialize(void) {
-  cursor_enable(14,15);
-  tty_row = 0;
-  tty_column = 0;
-  tty_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
-
+void tty_clear() {
   for (size_t y = 0; y < VGA_HEIGHT; y++) {
     for (size_t x = 0; x < VGA_WIDTH; x++) {
       const size_t index = y * VGA_WIDTH + x;
       tty_buffer[index] = vga_entry(' ', tty_color);
     }
   }
+  tty_row = 0;
+  tty_column = 0;
+}
+
+void tty_initialize(void) {
+  cursor_enable(14,15);
+  tty_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
+  tty_clear();
 }
 
 void tty_setcolor(uint8_t color) { tty_color = color; }
@@ -88,4 +91,21 @@ void tty_write(const char *data, size_t size) {
 
 void tty_writestring(const char *data) {
   tty_write(data, strlen(data));
+}
+char tty_last_char() {
+  size_t x = tty_column;
+  size_t y = tty_row;
+
+  if (x == 0) {
+    if (y == 0) {
+      return ' '; 
+    }
+    x = VGA_WIDTH - 1;
+    y--;
+  } else {
+    x--;
+  }
+
+  const size_t index = y * VGA_WIDTH + x;
+  return (char)(tty_buffer[index] & 0xFF);
 }

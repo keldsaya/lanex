@@ -7,7 +7,7 @@ LDFLAGS = -T linker.ld -ffreestanding -O2 -nostdlib -lgcc -Wl,--oformat,binary
 BUILD_DIR = build
 SRC_DIR = src
 
-OBJS = main.o io.o interrupts.o idt.o pic.o vga.o tty.o cursor.o keyboard.o sh.o
+OBJS = main.o io.o interrupts.o idt.o pic.o vga.o tty.o cursor.o keyboard.o sh.o messages.o
 
 OBJ_PATHS = $(addprefix $(BUILD_DIR)/, $(OBJS))
 

@@ -20,11 +20,12 @@ void idt_install() {
   for(int i = 0; i < 32; i++) {
     idt_set_gate(i, (uint32_t)isr_wrapper, 0x08, 0x8E);
   }
+  idt_set_gate(32, (uint32_t)isr_wrapper, 0x08, 0x8E);
   idt_set_gate(33, (uint32_t)keyboard_wrapper, 0x08, 0x8E);
-  __asm__ __volatile__("lidt (%0)" : : "r" (&idtp));
-  __asm__ __volatile__("sti");
+  asm volatile("lidt (%0)" : : "r" (&idtp));
 }
 
 void isr_handler() {
-  outb(0x20, 0x20);
+  tty_writestring("\n[KERNEL PANIC] CPU Exception!\n");
+  for(;;) asm volatile("cli; hlt");
 }

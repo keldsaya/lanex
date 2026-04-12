@@ -21,7 +21,7 @@ start:
   mov es, ax
   xor bx, bx
   mov ah, 0x02
-  mov al, 5
+  mov al, 64
   mov ch, 0
   mov dh, 0
   mov cl, 2
