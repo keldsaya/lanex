@@ -55,12 +55,6 @@ void execute(const char *cmd) {
     utoa(ticks / 1000, num_buf, 10);
     tty_writestring(num_buf);
     tty_writestring(" seconds\n");
-  } else if(strcmp(cmd, "timer") == 0) {
-    uint32_t ticks = pit_get_ticks();
-    tty_writestring("timer: ");
-    utoa(ticks , num_buf, 10);
-    tty_writestring(num_buf);
-    tty_writestring("\n");
   } else if(line_pos != 0) {
     tty_writestring("sh: Unknown command: ");
     tty_writestring(cmd);
