@@ -10,6 +10,7 @@ extern uint8_t tty_color;
 extern uint16_t *tty_buffer;
 
 void tty_clear();
+void tty_clear_current_row();
 void tty_initialize(void);
 void tty_setcolor(uint8_t color); 
 void tty_putentryat(char c, uint8_t color, size_t x, size_t y);

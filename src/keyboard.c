@@ -29,12 +29,39 @@ static char buf[BUF_SIZE];
 static volatile int head = 0;
 static volatile int tail = 0;
 static volatile int is_shift = 0;
+static volatile int e0_prefix = 0;
 
 void keyboard_handler() {
   uint8_t status = inb(0x64);
 
   if (status & 0x01) {
     uint8_t scancode = inb(0x60);
+    if(scancode == 0xE0) {
+      e0_prefix = 1;
+      outb(0x20, 0x20);
+      return;
+    }
+    if(e0_prefix) {
+      e0_prefix = 0;
+      if(scancode == 0x48) {
+        buf[head] = KEY_UP; 
+        head = (head + 1) % BUF_SIZE;
+      }
+      if(scancode == 0x50) {
+        buf[head] = KEY_DOWN; 
+        head = (head + 1) % BUF_SIZE;
+      }
+      if(scancode == 0x4B) {
+        buf[head] = KEY_LEFT; 
+        head = (head + 1) % BUF_SIZE;
+      }
+      if(scancode == 0x4D) {
+        buf[head] = KEY_RIGHT; 
+        head = (head + 1) % BUF_SIZE;
+      }
+      outb(0x20, 0x20);
+      return;
+    }
     if (scancode == 0x2A || scancode == 0x36) { 
       is_shift = 1; 
       outb(0x20, 0x20); 

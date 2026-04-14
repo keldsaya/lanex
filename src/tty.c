@@ -24,6 +24,13 @@ void tty_clear() {
   tty_row = 0;
   tty_column = 0;
 }
+void tty_clear_current_row() {
+  const size_t row_start = tty_row * VGA_WIDTH;
+  for (size_t x = 0; x < VGA_WIDTH; x++) {
+    tty_buffer[row_start + x] = vga_entry(' ', tty_color);
+  }
+  tty_column = 0; 
+  cursor_update(tty_column, tty_row);}
 
 void tty_initialize(void) {
   cursor_enable(14,15);
