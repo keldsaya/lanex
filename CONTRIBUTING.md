@@ -29,3 +29,4 @@
 * Language: C / Assembly.
 * Naming: snake_case.
 * Indent: 2 spaces.
+* Commentaries: `/* bla-bla */`
