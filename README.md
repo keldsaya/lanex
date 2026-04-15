@@ -5,7 +5,7 @@ The name "Lanex" originated from a friend's reaction to Linux memes — a simple
 ## Run
 ```
 sudo pacman -S nasm qemu-desktop
-yay -S i668-elf-binutils i686-elf-gcc
+yay -S i686-elf-binutils i686-elf-gcc
 make
 make run
 ```
