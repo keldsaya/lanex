@@ -32,4 +32,4 @@ make run
 ## Authors
 
 -   **keldsaya** - Initial development and maintenance.
--   **oguzokdotdev** - Documentation and porting.
+-   **[oguzokdotdev](https://github.com/oguzokdotdev/)** - Documentation and porting.
