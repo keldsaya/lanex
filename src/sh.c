@@ -5,6 +5,7 @@
 #include "keyboard.h"
 #include "messages.h"
 
+
 const char prompt[] = "> ";
 char line[MAX_LINE];
 size_t line_pos = 0;
