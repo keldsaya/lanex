@@ -159,7 +159,6 @@ void sh_char(const char c) {
     }
   }
 }
-
 void sh_main() {
   sh_prompt();
   for(;;) {
