@@ -1,16 +1,19 @@
 # LANEX
-**Lanex** is a monolithic, multiprocessor, minimalistic console-based operating system kernel, built from absolute scratch.
 
-The name "Lanex" originated from a friend's reaction to Linux memes — a simple, memorable twist that stuck.
+**Lanex** is a monolithic, -nix-like, multiprocessor, minimalistic, console-based operating system kernel, built from absolute scratch.
 
-## Run
+**Lanex** doesn't use other -nix code — everything is from scratch. But it looks like a -nix operating system kernel.
+
+The name "**Lanex**" originated from a friend's reaction to Linux memes — a simple, memorable twist that stuck.
+
+## Run (Arch-based systems)
 ```
 sudo pacman -S nasm qemu-desktop
 yay -S i686-elf-binutils i686-elf-gcc
 make
 make run
 ```
-## Run on Debian-based systems
+## Run (Debian-based systems)
 
 > Tested on Linux Mint (Zara 22.2)
 
@@ -33,4 +36,4 @@ make run
 ## Authors
 
 -   **keldsaya** - Initial development and maintenance.
--   **oguzokdotdev** - Documentation and porting.
+-   **oguzokdotdev** - Documentation and porting (first contributor)
