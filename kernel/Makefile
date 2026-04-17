@@ -17,7 +17,7 @@ KERNEL_OBJS = entry.o main.o io.o \
 							vga.o pit.o tty.o \
 							pmm.o keyboard.o cursor.o \
 							sh.o messages.o ata.o
-
+              
 OBJECTS = $(addprefix $(BUILD_DIR)/, $(KERNEL_OBJS))
 KERNEL = $(BUILD_DIR)/kernel.bin
 
