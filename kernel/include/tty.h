@@ -2,7 +2,6 @@
 #define H_TTY
 #include <stdint.h>
 #include <stddef.h>
-#include "vga.h"
 
 extern size_t tty_row;
 extern size_t tty_column;

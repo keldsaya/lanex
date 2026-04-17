@@ -1,6 +1,5 @@
 #include "pit.h"
 #include "io.h"
-#include "tty.h"
 
 static volatile uint32_t tick_count = 0;
 
