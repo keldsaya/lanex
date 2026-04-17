@@ -1,44 +1,31 @@
 CC = i686-elf-gcc
 AS = i686-elf-as
 NASM = nasm
-CFLAGS = -Iinclude -std=gnu99 -ffreestanding -O2 -Wall -Wextra
-LDFLAGS = -T linker.ld -ffreestanding -O2 -nostdlib -lgcc -Wl,--oformat,binary
+CFLAGS = -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+MEM = 4M
 
 BUILD_DIR = build
-SRC_DIR = src
-
-OBJS = main.o io.o interrupts.o idt.o pic.o vga.o tty.o cursor.o pit.o keyboard.o sh.o messages.o
-
-OBJ_PATHS = $(addprefix $(BUILD_DIR)/, $(OBJS))
-
-OUT_BIN = $(BUILD_DIR)/kernel.bin
-BOOT_BIN = $(BUILD_DIR)/boot.bin
+KERNEL_DIR = kernel
+LIBC_DIR = libc
 IMG = lanex.img
 
-all: $(IMG)
+.PHONY: all clean run libc kernel
 
-$(IMG): $(OUT_BIN) 
-	@mkdir -p $(BUILD_DIR)
-	$(NASM) -f bin $(SRC_DIR)/boot.asm -o $(BOOT_BIN)
-	cat $(BOOT_BIN) $(OUT_BIN) > $(IMG)
+all: libc kernel
+	$(NASM) -f bin $(KERNEL_DIR)/src/boot.asm -o $(BUILD_DIR)/boot.bin
+	cat $(BUILD_DIR)/boot.bin $(BUILD_DIR)/kernel.bin > $(IMG)
 	truncate -s 1440k $(IMG)
 
-$(OUT_BIN): $(OBJ_PATHS)
-	@mkdir -p $(BUILD_DIR)
-	$(CC) $(LDFLAGS) -o $@ $(OBJ_PATHS)
+libc:
+	@$(MAKE) -C $(LIBC_DIR) CC="$(CC)" AS="$(AS)" CFLAGS="$(CFLAGS)"
 
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(BUILD_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.s
-	@mkdir -p $(BUILD_DIR)
-	$(AS) $< -o $@
-
-run:
-	qemu-system-i386 -drive file=$(IMG),format=raw,index=0,media=disk
+kernel: libc
+	@$(MAKE) -C $(KERNEL_DIR) CC="$(CC)" AS="$(AS)" NASM="$(NASM)" \
+		BUILD_DIR="../$(BUILD_DIR)" LIBC_DIR="../$(LIBC_DIR)"
+run: all
+	qemu-system-i386 -m $(MEM) -drive file=$(IMG),format=raw,index=0,media=disk
 
 clean:
+	@$(MAKE) -C $(KERNEL_DIR) clean BUILD_DIR="../$(BUILD_DIR)" || true
+	@$(MAKE) -C $(LIBC_DIR) clean BUILD_DIR="../$(BUILD_DIR)" || true
 	rm -rf $(BUILD_DIR) $(IMG)
-
-.PHONY: all boot clean run

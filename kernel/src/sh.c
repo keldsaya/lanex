@@ -1,10 +1,9 @@
-#include "stddef.h"
-#include "pit.h"
+#include <string.h>
 #include "sh.h"
 #include "tty.h"
 #include "keyboard.h"
+#include "pit.h"     
 #include "messages.h"
-
 const char prompt[] = "> ";
 char line[MAX_LINE];
 size_t line_pos = 0;
@@ -14,51 +13,6 @@ static int history_count = 0;
 static int history_nav = 0;
 
 static char num_buf[32];
-char* utoa(unsigned int value, char* str, int base) {
-  char* rc;
-  char* ptr;
-  char* low;
-    
-  rc = ptr = str;
-    
-  if (base < 2 || base > 36) {
-    *str = '\0';
-    return str;
-  }
-    
-  do {
-    *ptr++ = "0123456789abcdef"[value % base];
-    value /= base;
-  } while (value);
-    
-  low = str;
-  ptr--;
-    
-  while (low < ptr) {
-    char tmp = *low;
-    *low++ = *ptr;
-    *ptr-- = tmp;
-  }
-    
-  return rc;
-}
-
-int strcmp(const char *s1, const char *s2) {
-  while (*s1 && (*s1 == *s2)) {
-    s1++;
-    s2++;
-  }
-  return (unsigned char)*s1 - (unsigned char)*s2;
-}
-
-int strncmp(const char* a, const char* b, int n) {
-  while (n-- && *a && *b && *a == *b) { a++; b++; }
-  return n < 0 ? 0 : *a - *b;
-}
-
-void strcpy(char* dst, const char* src) {
-  while ((*dst++ = *src++));
-}
 
 void add_history(const char *cmd) {
   if(cmd[0] == 0 || cmd[0] == '\0') return;

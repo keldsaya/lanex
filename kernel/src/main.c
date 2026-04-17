@@ -1,26 +1,27 @@
 #include "main.h"
-#include "vga.h"
+#include "tty.h"
 #include "idt.h"
 #include "pic.h"
-#include "tty.h"
-#include "keyboard.h"
 #include "pit.h"
 #include "sh.h"
 #include "messages.h"
 
-void _start() { kmain(); }
+extern uint32_t kernel_start;
+extern uint32_t kernel_end;
 
 void kmain() {
   tty_initialize();
+  
   idt_install();
   pic_remap();
   pit_init(1000);
 
-  asm volatile("sti"); /* enabling interrupts */
+  asm volatile("sti"); 
 
   welcome();
-  sh_main(); /* 'pid 1' */
+  sh_main(); 
+  
   for(;;) {
-    kpanic("Entering in infinity loop");
+    asm volatile("hlt");
   }
 }

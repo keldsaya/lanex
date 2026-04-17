@@ -1,4 +1,5 @@
 #include "messages.h"
+#include "vga.h"
 #include "tty.h"
 
 void kpanic(const char *msg) {

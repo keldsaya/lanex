@@ -1,3 +1,4 @@
+#include <string.h>
 #include "vga.h"
 #include "cursor.h"
 #include "tty.h"
@@ -6,13 +7,6 @@ size_t tty_row;
 size_t tty_column;
 uint8_t tty_color;
 uint16_t *tty_buffer = (uint16_t *)VGA_MEMORY;
-
-static size_t strlen(const char *str) {
-  size_t len = 0;
-  while (str[len])
-    len++;
-  return len;
-}
 
 void tty_clear() {
   for (size_t y = 0; y < VGA_HEIGHT; y++) {
