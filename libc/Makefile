@@ -6,7 +6,9 @@ SRC_DIR = src
 BUILD_DIR ?= ../build
 LIBC_BUILD_DIR = $(BUILD_DIR)/libc
 
-LIBC_OBJS = strlen.o strcpy.o strcmp.o strncmp.o itoa.o utoa.o
+LIBC_OBJS = strlen.o strcpy.o strcmp.o \
+						strncmp.o itoa.o utoa.o
+            
 OBJECTS = $(addprefix $(LIBC_BUILD_DIR)/, $(LIBC_OBJS))
 LIBRARY = $(BUILD_DIR)/libc.a
 
