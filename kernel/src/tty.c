@@ -89,10 +89,6 @@ void tty_write(const char *data, size_t size) {
   for (size_t i = 0; i < size; i++)
     tty_putchar(data[i]);
 }
-
-void tty_writestring(const char *data) {
-  tty_write(data, strlen(data));
-}
 char tty_last_char() {
   size_t x = tty_column;
   size_t y = tty_row;

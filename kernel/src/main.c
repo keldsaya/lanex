@@ -22,6 +22,6 @@ void kmain() {
   sh_main(); 
   
   for(;;) {
-    asm volatile("hlt");
+    kpanic("Entered in main().loop");
   }
 }

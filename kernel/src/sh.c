@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdio.h>
 #include "sh.h"
 #include "tty.h"
 #include "keyboard.h"
@@ -11,8 +12,6 @@ size_t line_pos = 0;
 static char history[HIST_SIZE][MAX_LINE];
 static int history_count = 0;
 static int history_nav = 0;
-
-static char num_buf[32];
 
 void add_history(const char *cmd) {
   if(cmd[0] == 0 || cmd[0] == '\0') return;
@@ -27,25 +26,19 @@ void execute(const char *cmd) {
     tty_clear();
   } else if(strcmp(cmd, "uptime") == 0) {
     uint32_t ticks = pit_get_ticks();
-    tty_writestring("uptime: ");
-    utoa(ticks / 1000, num_buf, 10);
-    tty_writestring(num_buf);
-    tty_writestring(" seconds\n");
+    kprintf("uptime: %d seconds\n", ticks / 1000);
   } else if(strncmp(cmd, "echo", 4) == 0) {
-    tty_writestring(cmd + 5);
-    tty_putchar('\n');
+    kprintf("%s\n", cmd + 5);
   } else if(strcmp(cmd, "panic") == 0) {
     kpanic("Called by user");
   } else if(strcmp(cmd, "help") == 0) {
-    tty_writestring("  clear - Clear screen\n");
-    tty_writestring("  uptime - Show uptime\n");
-    tty_writestring("  echo - Print\n");
-    tty_writestring("  panic - Show kernel panic\n");
-    tty_writestring("  help - Show this\n");
+    kprintf("  clear - Clear screen\n");
+    kprintf("  uptime - Show uptime\n");
+    kprintf("  echo - Print\n");
+    kprintf("  panic - Show kernel panic\n");
+    kprintf("  help - Show this\n");
   } else if(line_pos != 0) {
-    tty_writestring("sh: Unknown command: ");
-    tty_writestring(cmd);
-    tty_putchar('\n');
+    kprintf("sh: Unknown command: %s\n", cmd);
   }
 
   if(tty_last_char() == '\n')
@@ -67,7 +60,7 @@ void sh_init() {
   line_pos = 0;
 }
 void sh_prompt() {
-  tty_writestring(prompt);
+  kprintf(prompt);
 }
 
 void sh_char(const char c) {
@@ -95,7 +88,7 @@ void sh_char(const char c) {
     while(line[line_pos]) line_pos++;
     tty_clear_current_row();
     sh_prompt();
-    tty_writestring(line);
+    kprintf(line);
   } else if(c == '\n') {
     tty_putchar(c);
     line[line_pos] = '\0';

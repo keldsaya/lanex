@@ -12,7 +12,7 @@ LDFLAGS = -T ../linker.ld -ffreestanding -O2 -nostdlib -lgcc -Wl,--oformat,binar
 
 LIBC_LIB = $(BUILD_DIR)/libc.a
 
-KERNEL_OBJS = entry.o main.o io.o \
+KERNEL_OBJS = entry.o kprintf.o main.o io.o \
 							interrupts.o idt.o pic.o \
 							vga.o pit.o tty.o \
 							pmm.o keyboard.o cursor.o \
