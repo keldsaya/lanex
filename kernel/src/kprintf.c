@@ -20,25 +20,21 @@ void kprintf(const char* fmt, ...) {
         }
         case 'd': {
           int num = va_arg(args, int);
-          char buffer[12];  //足够存储32位整数 (-2147483648 到 2147483647)
+          char buffer[12]; 
           int idx = 0;
-          
-          // 处理负数
+      
           if (num < 0) {
             tty_putchar('-');
             num = -num;
           }
           
-          // 特殊情况: num == 0
           if (num == 0) {
             tty_putchar('0');
           } else {
-            // 将数字转换为字符串 (反向存储)
             while (num > 0) {
               buffer[idx++] = '0' + (num % 10);
               num /= 10;
             }
-            // 反向输出
             while (idx > 0) {
               tty_putchar(buffer[--idx]);
             }
