@@ -1,17 +1,21 @@
-MEM = 4M
-BUILD_DIR = $(CURDIR)/build
-IMG = $(BUILD_DIR)/lanex.img
-BOOT_BIN   = $(BUILD_DIR)/boot.bin
-KERNEL_BIN = $(BUILD_DIR)/kernel.bin
+MEM 					= 4M
+BUILD_DIR 		= $(CURDIR)/build
+
+REL_BUILD_DIR = build
+REL_IMG 		= $(REL_BUILD_DIR)/lanex.img
+
+IMG 				= $(BUILD_DIR)/lanex.img
+BOOT_BIN   	= $(BUILD_DIR)/boot.bin
+KERNEL_BIN 	= $(BUILD_DIR)/kernel.bin
 
 CC   = i686-elf-gcc
 AS   = i686-elf-as
 AR   = i686-elf-ar
 NASM = nasm
 
-CFLAGS  = -std=gnu99 -ffreestanding -O2 -Wall -Wextra
-LDFLAGS = -ffreestanding -O2 -nostdlib
-MAKEFLAGS += --no-print-directory
+CFLAGS  	= -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+LDFLAGS 	= -ffreestanding -O2 -nostdlib
+MAKEFLAGS += -s --no-print-directory
 
 ifeq ($(deb), 1)
     CC      = gcc -m32
@@ -28,7 +32,7 @@ export CC AS AR NASM CFLAGS LDFLAGS BUILD_DIR
 all: $(IMG)
 
 $(IMG): libc kernel $(BOOT_BIN)
-	@echo "  IMG     $(subst $(abspath .)/,,$@)"
+	@echo "  IMG     $(REL_IMG)"
 	@cat $(BOOT_BIN) $(KERNEL_BIN) > $(IMG)
 	@truncate -s 1440k $(IMG)
 
@@ -44,7 +48,9 @@ kernel:
 	@$(MAKE) -C kernel
 
 run: all
-	qemu-system-i386 -m $(MEM) -drive file=$(IMG),format=raw,index=0,media=disk
+	@echo "  RUN     $(REL_IMG)"
+	@qemu-system-i386 -m $(MEM) -drive file=$(IMG),format=raw,index=0,media=disk
 
 clean:
-	rm -rf $(subst $(abspath .)/,,$(BUILD_DIR))
+	@echo "  CLN     $(REL_BUILD_DIR)"
+	@rm -rf $(BUILD_DIR)
