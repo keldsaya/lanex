@@ -1,6 +1,8 @@
 MEM = 4M
 BUILD_DIR = $(CURDIR)/build
-IMG = lanex.img
+IMG = $(BUILD_DIR)/lanex.img
+BOOT_BIN   = $(BUILD_DIR)/boot.bin
+KERNEL_BIN = $(BUILD_DIR)/kernel.bin
 
 CC   = i686-elf-gcc
 AS   = i686-elf-as
@@ -9,6 +11,7 @@ NASM = nasm
 
 CFLAGS  = -std=gnu99 -ffreestanding -O2 -Wall -Wextra
 LDFLAGS = -ffreestanding -O2 -nostdlib
+MAKEFLAGS += --no-print-directory
 
 ifeq ($(deb), 1)
     CC      = gcc -m32
@@ -22,22 +25,26 @@ export CC AS AR NASM CFLAGS LDFLAGS BUILD_DIR
 
 .PHONY: all clean run libc kernel
 
-all: libc kernel
+all: $(IMG)
+
+$(IMG): libc kernel $(BOOT_BIN)
+	@echo "  IMG     $(subst $(abspath .)/,,$@)"
+	@cat $(BOOT_BIN) $(KERNEL_BIN) > $(IMG)
+	@truncate -s 1440k $(IMG)
+
+$(BOOT_BIN): kernel/src/boot.asm
+	@echo "  ASM     $<"
 	@mkdir -p $(BUILD_DIR)
-	$(NASM) -f bin kernel/src/boot.asm -o $(BUILD_DIR)/boot.bin
-	cat $(BUILD_DIR)/boot.bin $(BUILD_DIR)/kernel.bin > $(IMG)
-	truncate -s 1440k $(IMG)
+	@$(NASM) -f bin $< -o $@
 
 libc:
 	@$(MAKE) -C libc
 
-kernel: libc
+kernel:
 	@$(MAKE) -C kernel
 
 run: all
 	qemu-system-i386 -m $(MEM) -drive file=$(IMG),format=raw,index=0,media=disk
 
 clean:
-	@$(MAKE) -C libc clean
-	@$(MAKE) -C kernel clean
-	rm -rf $(BUILD_DIR) $(IMG)
+	rm -rf $(subst $(abspath .)/,,$(BUILD_DIR))

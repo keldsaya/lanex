@@ -15,11 +15,9 @@ all: $(LIB)
 
 $(LIB): $(OBJS)
 	@mkdir -p $(dir $@)
-	$(AR) rcs $@ $(OBJS) 
+	@$(AR) rcs $@ $(OBJS) 
 
 $(L_BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	@echo "  CC      $<"
 	@mkdir -p $(L_BUILD_DIR)
-	$(CC) $(INTERNAL_CFLAGS) -c $< -o $@
-
-clean:
-	rm -rf $(L_BUILD_DIR)
+	@$(CC) $(INTERNAL_CFLAGS) -c $< -o $@
