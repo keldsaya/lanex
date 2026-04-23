@@ -5,7 +5,8 @@ KERNEL_OBJS = entry.o kprintf.o main.o io.o \
               interrupts.o idt.o pic.o \
               vga.o pit.o tty.o \
               pmm.o keyboard.o cursor.o \
-              sh.o messages.o ata.o
+              sh.o messages.o ata.o \
+							power.o
 
 OBJS = $(addprefix $(BUILD_DIR)/kernel/, $(KERNEL_OBJS))
 BIN  = $(BUILD_DIR)/kernel.bin
