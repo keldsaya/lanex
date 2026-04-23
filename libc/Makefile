@@ -1,28 +1,25 @@
-CC = i686-elf-gcc
-AR = i686-elf-ar
-CFLAGS_LOCAL = -Iinclude -ffreestanding -O2 -Wall -Wextra
-
 SRC_DIR = src
-BUILD_DIR ?= ../build
-LIBC_BUILD_DIR = $(BUILD_DIR)/libc
+L_BUILD_DIR = $(BUILD_DIR)/libc
 
 LIBC_OBJS = strlen.o strcpy.o strcmp.o \
-						strncmp.o itoa.o utoa.o
-            
-OBJECTS = $(addprefix $(LIBC_BUILD_DIR)/, $(LIBC_OBJS))
-LIBRARY = $(BUILD_DIR)/libc.a
+            strncmp.o itoa.o utoa.o
+
+OBJS = $(addprefix $(L_BUILD_DIR)/, $(LIBC_OBJS))
+LIB  = $(L_BUILD_DIR)/libc.a
+
+INTERNAL_CFLAGS = $(CFLAGS) -Iinclude
 
 .PHONY: all clean
 
-all: $(LIBRARY)
+all: $(LIB)
 
-$(LIBRARY): $(OBJECTS)
+$(LIB): $(OBJS)
 	@mkdir -p $(dir $@)
-	$(AR) rcs $@ $(OBJECTS)
+	$(AR) rcs $@ $(OBJS) 
 
-$(LIBC_BUILD_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(LIBC_BUILD_DIR)
-	$(CC) $(CFLAGS_LOCAL) -c $< -o $@
+$(L_BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(L_BUILD_DIR)
+	$(CC) $(INTERNAL_CFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(LIBC_BUILD_DIR) $(LIBRARY)
+	rm -rf $(L_BUILD_DIR)
