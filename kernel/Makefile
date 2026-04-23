@@ -18,20 +18,22 @@ INTERNAL_LDFLAGS = $(LDFLAGS) -T ../linker.ld -Wl,--oformat,binary
 
 all: $(BIN)
 
-$(BIN): $(OBJS)
-	$(CC) $(INTERNAL_LDFLAGS) -o $@ $(OBJS) $(LIBC) -lgcc
+$(BIN): $(OBJS) $(LIBC)
+	@echo "  LD      $(subst $(abspath ..)/,,$@)"
+	@$(CC) $(INTERNAL_LDFLAGS) -o $@ $(OBJS) $(LIBC) -lgcc
 
 $(BUILD_DIR)/kernel/%.o: $(SRC_DIR)/%.c
+	@echo "  CC      $<"
 	@mkdir -p $(dir $@)
-	$(CC) $(INTERNAL_CFLAGS) -c $< -o $@
+	@$(CC) $(INTERNAL_CFLAGS) -c $< -o $@
 
 $(BUILD_DIR)/kernel/%.o: $(SRC_DIR)/%.s
+	@echo "  ASM     $<"
 	@mkdir -p $(dir $@)
-	$(AS) $< -o $@
+	@$(AS) $< -o $@
 
 $(BUILD_DIR)/kernel/%.o: $(SRC_DIR)/%.asm
+	@echo "  ASM     $<"
 	@mkdir -p $(dir $@)
-	$(NASM) -f elf32 $< -o $@
+	@$(NASM) -f elf32 $< -o $@
 
-clean:
-	rm -rf $(BUILD_DIR)/kernel
