@@ -1,44 +1,37 @@
-CC = i686-elf-gcc
-AS = i686-elf-as
-NASM = nasm
-
-PROJECT_ROOT := $(abspath $(CURDIR)/..)
-SRC_DIR = src
-BUILD_DIR ?= $(PROJECT_ROOT)/build
-LIBC_DIR = $(PROJECT_ROOT)/libc
-
-CFLAGS = -I$(LIBC_DIR)/include -Iinclude -std=gnu99 -ffreestanding -O2 -Wall -Wextra
-LDFLAGS = -T ../linker.ld -ffreestanding -O2 -nostdlib -lgcc -Wl,--oformat,binary
-
-LIBC_LIB = $(BUILD_DIR)/libc.a
+LIBC_DIR = $(abspath ../libc)
+SRC_DIR  = src
 
 KERNEL_OBJS = entry.o kprintf.o main.o io.o \
-							interrupts.o idt.o pic.o \
-							vga.o pit.o tty.o \
-							pmm.o keyboard.o cursor.o \
-							sh.o messages.o ata.o
-              
-OBJECTS = $(addprefix $(BUILD_DIR)/, $(KERNEL_OBJS))
-KERNEL = $(BUILD_DIR)/kernel.bin
+              interrupts.o idt.o pic.o \
+              vga.o pit.o tty.o \
+              pmm.o keyboard.o cursor.o \
+              sh.o messages.o ata.o
+
+OBJS = $(addprefix $(BUILD_DIR)/kernel/, $(KERNEL_OBJS))
+BIN  = $(BUILD_DIR)/kernel.bin
+LIBC = $(BUILD_DIR)/libc/libc.a
+
+INTERNAL_CFLAGS = $(CFLAGS) -I$(LIBC_DIR)/include -Iinclude
+INTERNAL_LDFLAGS = $(LDFLAGS) -T ../linker.ld -Wl,--oformat,binary
 
 .PHONY: all clean
 
-all: $(KERNEL)
+all: $(BIN)
 
-$(KERNEL): $(OBJECTS) $(LIBC_LIB)
-	$(CC) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBC_LIB)
+$(BIN): $(OBJS)
+	$(CC) $(INTERNAL_LDFLAGS) -o $@ $(OBJS) $(LIBC) -lgcc
 
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(BUILD_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+$(BUILD_DIR)/kernel/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(INTERNAL_CFLAGS) -c $< -o $@
 
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.s
-	@mkdir -p $(BUILD_DIR)
+$(BUILD_DIR)/kernel/%.o: $(SRC_DIR)/%.s
+	@mkdir -p $(dir $@)
 	$(AS) $< -o $@
 
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.asm
-	@mkdir -p $(BUILD_DIR)
+$(BUILD_DIR)/kernel/%.o: $(SRC_DIR)/%.asm
+	@mkdir -p $(dir $@)
 	$(NASM) -f elf32 $< -o $@
 
 clean:
-	rm -f $(OBJECTS) $(KERNEL)
+	rm -rf $(BUILD_DIR)/kernel
