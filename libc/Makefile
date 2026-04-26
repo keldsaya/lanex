@@ -1,8 +1,8 @@
 SRC_DIR = src
 L_BUILD_DIR = $(BUILD_DIR)/libc
 
-LIBC_OBJS = strlen.o strcpy.o strcmp.o \
-            strncmp.o itoa.o utoa.o
+LIBC_OBJS = strlen.c.o strcpy.c.o strcmp.c.o \
+            strncmp.c.o itoa.c.o utoa.c.o
 
 OBJS = $(addprefix $(L_BUILD_DIR)/, $(LIBC_OBJS))
 LIB  = $(L_BUILD_DIR)/libc.a
@@ -17,7 +17,7 @@ $(LIB): $(OBJS)
 	@mkdir -p $(dir $@)
 	@$(AR) rcs $@ $(OBJS) 
 
-$(L_BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+$(L_BUILD_DIR)/%.c.o: $(SRC_DIR)/%.c
 	@echo "  CC      $<"
 	@mkdir -p $(L_BUILD_DIR)
 	@$(CC) $(INTERNAL_CFLAGS) -c $< -o $@

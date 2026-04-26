@@ -3,6 +3,7 @@
 #include "idt.h"
 #include "pic.h"
 #include "pit.h"
+#include "rtc.h"
 #include "sh.h"
 #include "messages.h"
 
@@ -15,6 +16,7 @@ void kmain() {
   idt_install();
   pic_remap();
   pit_init(1000);
+  rtc_init(1024);
 
   asm volatile("sti"); 
 

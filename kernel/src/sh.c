@@ -6,6 +6,7 @@
 #include "pit.h"     
 #include "messages.h"
 #include "power.h"
+#include "rtc.h"
 
 const char prompt[] = "> ";
 char line[MAX_LINE];
@@ -30,6 +31,8 @@ void execute(const char *cmd) {
     power_shutdown();
   } else if(strcmp(cmd, "reboot") == 0) {
     power_reboot();
+  } else if(strcmp(cmd, "date") == 0) {
+    rtc_print_datetime();
   } else if(strcmp(cmd, "uptime") == 0) {
     uint32_t ticks = pit_get_ticks();
     kprintf("uptime: %d seconds\n", ticks / 1000);
@@ -39,11 +42,12 @@ void execute(const char *cmd) {
     kpanic("Called by user");
   } else if(strcmp(cmd, "help") == 0) {
     kprintf("  clear - Clear screen\n");
+    kprintf("  shutdown - Shutdown system\n");
+    kprintf("  reboot - Reboot system\n");
+    kprintf("  date - Show time\n");
     kprintf("  uptime - Show uptime\n");
     kprintf("  echo - Print\n");
     kprintf("  panic - Show kernel panic\n");
-    kprintf("  shutdown - Shutdown system\n");
-    kprintf("  reboot - Reboot system\n");
     kprintf("  help - Show this\n");
   } else if(line_pos != 0) {
     kprintf("sh: Unknown command: %s\n", cmd);

@@ -3,9 +3,11 @@
 .global isr_wrapper
 .global keyboard_wrapper
 .global pit_wrapper
+.global rtc_wrapper
 .extern isr_handler
 .extern keyboard_handler
 .extern pit_handler
+.extern rtc_wrapper
 
 .macro INTERRUPT_WRAPPER name, target
 .global \name
@@ -30,3 +32,4 @@
 INTERRUPT_WRAPPER isr_wrapper, isr_handler
 INTERRUPT_WRAPPER keyboard_wrapper, keyboard_handler
 INTERRUPT_WRAPPER pit_wrapper, pit_handler
+INTERRUPT_WRAPPER rtc_wrapper, rtc_handler
