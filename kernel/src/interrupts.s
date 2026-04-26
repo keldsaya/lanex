@@ -7,7 +7,7 @@
 .extern isr_handler
 .extern keyboard_handler
 .extern pit_handler
-.extern rtc_wrapper
+.extern rtc_handler
 
 .macro INTERRUPT_WRAPPER name, target
 .global \name

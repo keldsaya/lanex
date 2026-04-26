@@ -27,11 +27,11 @@ endif
 
 export CC AS AR NASM CFLAGS LDFLAGS BUILD_DIR
 
-.PHONY: all clean run libc kernel bootloader
+.PHONY: all clean run bootloader libc kernel drivers
 
 all: $(IMG)
 
-$(IMG): libc kernel bootloader
+$(IMG): bootloader libc kernel drivers
 	@echo "  IMG     $(REL_IMG)"
 	@cat $(BOOT_BIN) $(KERNEL_BIN) > $(IMG)
 	@truncate -s 1440k $(IMG)
@@ -44,6 +44,9 @@ kernel:
 
 bootloader:
 	@$(MAKE) -C bootloader
+
+drivers:
+	@$(MAKE) -C	drivers 
 
 run: all
 	@echo "  RUN     $(REL_IMG)"
