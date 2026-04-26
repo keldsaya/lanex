@@ -99,3 +99,7 @@ menuconfig:
 clean:
 	@echo "  CLN     $(REL_BUILD_DIR)"
 	@rm -rf $(BUILD_DIR)
+
+clean-drivers:
+	@echo "  CLN     $(REL_BUILD_DIR)/drivers"
+	@rm -rf $(BUILD_DIR)/drivers
