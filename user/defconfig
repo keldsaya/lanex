@@ -1,0 +1,9 @@
+# Lanex default configuration
+# y = enable, n = disable
+
+CONFIG_DRIVER_VGA=y
+CONFIG_DRIVER_CURSOR=y
+CONFIG_DRIVER_KEYBOARD=y
+CONFIG_DRIVER_ATA=y
+CONFIG_DRIVER_POWER=y
+CONFIG_DRIVER_RTC=y
