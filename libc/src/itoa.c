@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdint.h>
 
 void itoa(uint32_t n, char* str) {
   char temp[12];

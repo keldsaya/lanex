@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdint.h>
 
 char* utoa(unsigned int value, char* str, int base) {
   char* rc;
