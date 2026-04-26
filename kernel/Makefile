@@ -28,7 +28,7 @@ $(BUILD_DIR)/kernel/%.c.o: $(SRC_DIR)/%.c $(BUILD_DIR)/kernel/config.h
 	@mkdir -p $(dir $@)
 	@$(CC) $(INTERNAL_CFLAGS) -I$(BUILD_DIR)/kernel -c $< -o $@
 
-$(BUILD_DIR)/kernel/%.s.o: $(SRC_DIR)/%.s 
+$(BUILD_DIR)/kernel/%.s.o: $(SRC_DIR)/%.s
 	@echo "  ASM     $<"
 	@mkdir -p $(dir $@)
 	@$(AS) $< -o $@
@@ -51,5 +51,6 @@ $(BUILD_DIR)/kernel/config.h: $(CURDIR)/../.config
 	@grep "^CONFIG_.*=n" $< | sed 's/=n$$//' | sed 's/^/#undef /' >> $@
 	@echo "" >> $@
 	@echo "#endif" >> $@
+  
 clean:
 	@rm -f $(OBJS) $(BIN)
