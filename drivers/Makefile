@@ -14,6 +14,7 @@ all: $(LIB_DRIVERS)
 $(LIB_DRIVERS): $(OBJS)
 	@echo "  AR      drivers.a ($(DRIVERS-y))"
 	@mkdir -p $(dir $@)
+	@rm -f $@
 	@$(AR) rcs $@ $(OBJS)
 
 $(D_BUILD_DIR)/%.c.o: $(SRC_DIR)/%.c
