@@ -67,9 +67,11 @@ uint32_t rtc_get_ticks(void) {
 }
 
 void rtc_handler(void) {
+#ifdef CONFIG_DRIVER_RTC
   rtc_tick_count++;
     
   rtc_read(RTC_REG_C);
+#endif
     
   outb(0x20, 0x20);  /* Master PIC */
   outb(0xA0, 0x20);  /* Slave PIC */
