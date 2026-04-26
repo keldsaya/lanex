@@ -5,3 +5,4 @@
 *.a
 .config
 .config.old
+build/kernel/config.h
