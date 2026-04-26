@@ -1,13 +1,22 @@
 #include "idt.h"
 #include "messages.h" 
+#include "config.h"
 
 struct idt_entry idt[256];
 struct idt_ptr idtp;
 
 extern void isr_wrapper();
-extern void keyboard_wrapper();
 extern void pit_wrapper();
+extern void keyboard_wrapper();
 extern void rtc_wrapper();
+
+#ifndef CONFIG_DRIVER_KEYBOARD
+void keyboard_handler() {}
+#endif
+
+#ifndef CONFIG_DRIVER_RTC
+void rtc_handler() {}
+#endif
 
 void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags) {
   idt[num].base_low = (base & 0xFFFF);

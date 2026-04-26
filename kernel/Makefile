@@ -23,10 +23,10 @@ $(BIN): $(OBJS) $(LIBC) $(DRIVERS)
 	@echo "  LD      $(subst $(abspath ..)/,,$@)"
 	@$(CC) $(INTERNAL_LDFLAGS) -o $@ $(OBJS) $(DRIVERS) $(LIBC) -lgcc
 
-$(BUILD_DIR)/kernel/%.c.o: $(SRC_DIR)/%.c
+$(BUILD_DIR)/kernel/%.c.o: $(SRC_DIR)/%.c $(BUILD_DIR)/kernel/config.h
 	@echo "  CC      $<"
 	@mkdir -p $(dir $@)
-	@$(CC) $(INTERNAL_CFLAGS) -c $< -o $@
+	@$(CC) $(INTERNAL_CFLAGS) -I$(BUILD_DIR)/kernel -c $< -o $@
 
 $(BUILD_DIR)/kernel/%.s.o: $(SRC_DIR)/%.s
 	@echo "  ASM     $<"
@@ -38,5 +38,19 @@ $(BUILD_DIR)/kernel/%.asm.o: $(SRC_DIR)/%.asm
 	@mkdir -p $(dir $@)
 	@$(NASM) -f elf32 $< -o $@
 
+$(BUILD_DIR)/kernel/config.h: $(CURDIR)/../.config
+	@mkdir -p $(dir $@)
+	@echo "/* Auto-generated config header */" > $@
+	@echo "#ifndef _CONFIG_H_" >> $@
+	@echo "#define _CONFIG_H_" >> $@
+	@echo "" >> $@
+	@echo "/* Enabled drivers (y): */" >> $@
+	@grep "^CONFIG_.*=y" $< | sed 's/=y$$/ 1/' | sed 's/^/#define /' >> $@
+	@echo "" >> $@
+	@echo "/* Disabled drivers (n): */" >> $@
+	@grep "^CONFIG_.*=n" $< | sed 's/=n$$//' | sed 's/^/#undef /' >> $@
+	@echo "" >> $@
+	@echo "#endif" >> $@
+  
 clean:
 	@rm -f $(OBJS) $(BIN)

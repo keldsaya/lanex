@@ -1,5 +1,6 @@
 #include "io.h"
 #include "keyboard.h"
+
 const char lower_scancodes[128] = {
   0, 27, '1', '2', '3', '4', '5', '6',
   '7', '8', '9', '0', '-', '=', '\b', '\t',
@@ -44,36 +45,36 @@ void keyboard_handler() {
     if(e0_prefix) {
       e0_prefix = 0;
       if(scancode == 0x48) {
-        buf[head] = KEY_UP; 
+        buf[head] = KEY_UP;
         head = (head + 1) % BUF_SIZE;
       }
       if(scancode == 0x50) {
-        buf[head] = KEY_DOWN; 
+        buf[head] = KEY_DOWN;
         head = (head + 1) % BUF_SIZE;
       }
       if(scancode == 0x4B) {
-        buf[head] = KEY_LEFT; 
+        buf[head] = KEY_LEFT;
         head = (head + 1) % BUF_SIZE;
       }
       if(scancode == 0x4D) {
-        buf[head] = KEY_RIGHT; 
+        buf[head] = KEY_RIGHT;
         head = (head + 1) % BUF_SIZE;
       }
       outb(0x20, 0x20);
       return;
     }
-    if (scancode == 0x2A || scancode == 0x36) { 
-      is_shift = 1; 
-      outb(0x20, 0x20); 
-      return; 
+    if (scancode == 0x2A || scancode == 0x36) {
+      is_shift = 1;
+      outb(0x20, 0x20);
+      return;
     }
-    if (scancode == 0xAA || scancode == 0xB6) { 
-      is_shift = 0; 
-      outb(0x20, 0x20); 
-      return; 
+    if (scancode == 0xAA || scancode == 0xB6) {
+      is_shift = 0;
+      outb(0x20, 0x20);
+      return;
     }
     if (!(scancode & 0x80)) {
-      char c = is_shift ? upper_scancodes[scancode] : 
+      char c = is_shift ? upper_scancodes[scancode] :
         lower_scancodes[scancode];
       if(c != 0) {
         int next_head = (head + 1) % BUF_SIZE;

@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdio.h>
+#include "config.h"
 #include "sh.h"
 #include "tty.h"
 #include "keyboard.h"
@@ -27,13 +28,20 @@ void add_history(const char *cmd) {
 void execute(const char *cmd) {
   if(strcmp(cmd, "clear") == 0) {
     tty_clear();
-  } else if(strcmp(cmd, "shutdown") == 0) {
+  }
+#ifdef CONFIG_DRIVER_POWER 
+  else if(strcmp(cmd, "shutdown") == 0) {
     power_shutdown();
   } else if(strcmp(cmd, "reboot") == 0) {
     power_reboot();
-  } else if(strcmp(cmd, "date") == 0) {
+  }
+#endif
+#ifdef CONFIG_DRIVER_RTC
+  else if(strcmp(cmd, "date") == 0) {
     rtc_print_datetime();
-  } else if(strcmp(cmd, "uptime") == 0) {
+  }
+#endif 
+  else if(strcmp(cmd, "uptime") == 0) {
     uint32_t ticks = pit_get_ticks();
     kprintf("uptime: %d seconds\n", ticks / 1000);
   } else if(strncmp(cmd, "echo", 4) == 0) {
@@ -42,9 +50,13 @@ void execute(const char *cmd) {
     kpanic("Called by user");
   } else if(strcmp(cmd, "help") == 0) {
     kprintf("  clear - Clear screen\n");
+#ifdef CONFIG_DRIVER_POWER 
     kprintf("  shutdown - Shutdown system\n");
     kprintf("  reboot - Reboot system\n");
+#endif
+#ifdef CONFIG_DRIVER_RTC
     kprintf("  date - Show time\n");
+#endif
     kprintf("  uptime - Show uptime\n");
     kprintf("  echo - Print\n");
     kprintf("  panic - Show kernel panic\n");
@@ -123,7 +135,11 @@ void sh_main() {
   sh_prompt();
   for(;;) {
     asm volatile("hlt");
+#ifdef CONFIG_DRIVER_KEYBOARD
     char c = keyboard_get_char();
+#else
+    char c = 0;
+#endif
     if(c)
       sh_char(c);
   }

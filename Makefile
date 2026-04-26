@@ -13,6 +13,7 @@ AS   = i686-elf-as
 AR   = i686-elf-ar
 NASM = nasm
 
+
 CFLAGS      = -std=gnu99 -ffreestanding -O2 -Wall -Wextra
 LDFLAGS     = -ffreestanding -O2 -nostdlib
 MAKEFLAGS += -s --no-print-directory
@@ -26,12 +27,13 @@ ifeq ($(deb), 1)
 endif
 
 export CC AS AR NASM CFLAGS LDFLAGS BUILD_DIR
+export CONFIG_FILE=$(CURDIR)/.config
 
 .PHONY: all clean run bootloader libc kernel drivers
 
 all: $(IMG)
 
-$(IMG): bootloader libc kernel drivers
+$(IMG): bootloader libc drivers kernel
 	@echo "  IMG     $(REL_IMG)"
 	@cat $(BOOT_BIN) $(KERNEL_BIN) > $(IMG)
 	@truncate -s 1440k $(IMG)
@@ -51,6 +53,9 @@ drivers:
 run: all
 	@echo "  RUN     $(REL_IMG)"
 	@qemu-system-i386 -m $(MEM) -drive file=$(IMG),format=raw,index=0,media=disk
+
+menuconfig:
+	@$(MAKE) -C drivers menuconfig
 
 clean:
 	@echo "  CLN     $(REL_BUILD_DIR)"

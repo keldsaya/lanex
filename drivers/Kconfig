@@ -1,0 +1,42 @@
+# drivers/Kconfig
+menu "Device Drivers"
+
+
+config DRIVER_VGA
+  bool "VGA text mode driver"
+  default y
+  help
+    VGA text mode console driver
+
+config DRIVER_CURSOR
+  bool "Hardware cursor support"
+  depends on DRIVER_VGA
+  default y
+  help
+    Enables hardware text cursor
+
+config DRIVER_KEYBOARD
+  bool "PS/2 keyboard driver"
+  default y
+  help
+    Standard PS/2 keyboard support
+
+config DRIVER_ATA
+  bool "ATA/IDE disk driver"
+  default y
+  help
+    Support for ATA/IDE hard drives
+
+config DRIVER_POWER
+  bool "Power management driver"
+  default y
+  help
+    Shutdown and reboot support
+
+config DRIVER_RTC
+  bool "Real Time Clock driver"
+  default y
+  help
+    CMOS RTC driver for time/date
+
+endmenu

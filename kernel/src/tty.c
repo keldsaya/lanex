@@ -1,7 +1,17 @@
 #include <string.h>
-#include "vga.h"
-#include "cursor.h"
 #include "tty.h"
+#include "config.h"
+
+#ifdef CONFIG_DRIVER_VGA
+
+#ifndef CONFIG_DRIVER_CURSOR
+#define cursor_enable(start, end) do {} while(0)
+#define cursor_update(x, y) do {} while(0)
+#else
+#include "cursor.h"
+#endif
+
+#include "vga.h"
 
 size_t tty_row;
 size_t tty_column;
@@ -18,13 +28,15 @@ void tty_clear() {
   tty_row = 0;
   tty_column = 0;
 }
+
 void tty_clear_current_row() {
   const size_t row_start = tty_row * VGA_WIDTH;
   for (size_t x = 0; x < VGA_WIDTH; x++) {
     tty_buffer[row_start + x] = vga_entry(' ', tty_color);
   }
-  tty_column = 0; 
-  cursor_update(tty_column, tty_row);}
+  tty_column = 0;
+  cursor_update(tty_column, tty_row);
+}
 
 void tty_initialize(void) {
   cursor_enable(14,15);
@@ -89,13 +101,14 @@ void tty_write(const char *data, size_t size) {
   for (size_t i = 0; i < size; i++)
     tty_putchar(data[i]);
 }
+
 char tty_last_char() {
   size_t x = tty_column;
   size_t y = tty_row;
 
   if (x == 0) {
     if (y == 0) {
-      return ' '; 
+      return ' ';
     }
     x = VGA_WIDTH - 1;
     y--;
@@ -106,3 +119,15 @@ char tty_last_char() {
   const size_t index = y * VGA_WIDTH + x;
   return (char)(tty_buffer[index] & 0xFF);
 }
+
+#else /* !CONFIG_DRIVER_VGA */
+
+void tty_clear(void) {}
+void tty_clear_current_row(void) {}
+void tty_initialize(void) {}
+void tty_setcolor(uint8_t color) { (void)color; }
+void tty_putchar(char c) { (void)c; }
+void tty_write(const char *data, size_t size) { (void)data; (void)size; }
+char tty_last_char(void) { return 0; }
+
+#endif /* CONFIG_DRIVER_VGA */

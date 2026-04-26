@@ -3,4 +3,5 @@
 *.iso
 *.img
 *.a
-total_lines
+.config
+.config.old

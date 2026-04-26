@@ -1,0 +1,12 @@
+# drivers/Kconfig.include 
+-include $(CONFIG_FILE)
+
+DRIVERS-y =
+DRIVERS-$(CONFIG_DRIVER_VGA)      += vga
+DRIVERS-$(CONFIG_DRIVER_KEYBOARD) += keyboard
+DRIVERS-$(CONFIG_DRIVER_CURSOR)   += cursor
+DRIVERS-$(CONFIG_DRIVER_ATA)      += ata
+DRIVERS-$(CONFIG_DRIVER_POWER)    += power
+DRIVERS-$(CONFIG_DRIVER_RTC)      += rtc
+
+DRIVER_OBJS = $(addsuffix .c.o, $(DRIVERS-y))
