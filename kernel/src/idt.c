@@ -7,6 +7,7 @@ struct idt_ptr idtp;
 extern void isr_wrapper();
 extern void keyboard_wrapper();
 extern void pit_wrapper();
+extern void rtc_wrapper();
 
 void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags) {
   idt[num].base_low = (base & 0xFFFF);
@@ -25,6 +26,7 @@ void idt_install() {
   }
   idt_set_gate(32, (uint32_t)pit_wrapper, 0x08, 0x8E);
   idt_set_gate(33, (uint32_t)keyboard_wrapper, 0x08, 0x8E);
+  idt_set_gate(40, (uint32_t)rtc_wrapper, 0x08, 0x8E);
   asm volatile("lidt (%0)" : : "r" (&idtp));
 }
 
