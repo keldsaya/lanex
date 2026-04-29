@@ -2,7 +2,8 @@ SRC_DIR = src
 L_BUILD_DIR = $(BUILD_DIR)/libc
 
 LIBC_OBJS = strlen.c.o strcpy.c.o strcmp.c.o \
-            strncmp.c.o itoa.c.o utoa.c.o
+            strncmp.c.o itoa.c.o utoa.c.o \
+						memset.c.o memcpy.c.o memcmp.c.o
 
 OBJS = $(addprefix $(L_BUILD_DIR)/, $(LIBC_OBJS))
 LIB  = $(L_BUILD_DIR)/libc.a
