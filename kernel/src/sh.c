@@ -5,9 +5,11 @@
 #include "tty.h"
 #include "keyboard.h"
 #include "pit.h"     
+#include "pmm.h"     
 #include "messages.h"
 #include "power.h"
 #include "rtc.h"
+#include "main.h"
 
 const char prompt[] = "> ";
 char line[MAX_LINE];
@@ -41,7 +43,13 @@ void execute(const char *cmd) {
     rtc_print_datetime();
   }
 #endif 
-  else if(strcmp(cmd, "uptime") == 0) {
+  else if(strcmp(cmd, "free") == 0) {
+    uint32_t total = k_get_mem();
+    uint32_t free_pages = pmm_free_pages_count();
+    uint32_t free_kb = free_pages * 4;
+    kprintf("Total: %uKB, Free: %uKB, Used: %uKB\n",
+        total, free_kb, total - free_kb);
+  } else if(strcmp(cmd, "uptime") == 0) {
     uint32_t ticks = pit_get_ticks();
     kprintf("uptime: %d seconds\n", ticks / 1000);
   } else if(strncmp(cmd, "echo", 4) == 0) {
@@ -57,6 +65,7 @@ void execute(const char *cmd) {
 #ifdef CONFIG_DRIVER_RTC
     kprintf("  date - Show time\n");
 #endif
+    kprintf("  free - Show memory\n");
     kprintf("  uptime - Show uptime\n");
     kprintf("  echo - Print\n");
     kprintf("  panic - Show kernel panic\n");

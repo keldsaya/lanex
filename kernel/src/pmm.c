@@ -60,3 +60,15 @@ void pmm_free_page(void *addr) {
   set_page(page, 0);
   if(page < next_free_page) next_free_page = page;
 }
+
+uint32_t pmm_free_pages_count(void) {
+  uint32_t free_pages = 0;
+  for(uint32_t i = 0; i < total_pages; i++) {
+    uint32_t byte = i / BITS_PER_BYTE;
+    uint8_t bit = i % BITS_PER_BYTE;
+    if(!(bitmap[byte] & (1 << bit))) {
+      free_pages++;
+    }
+  }
+  return free_pages;
+}

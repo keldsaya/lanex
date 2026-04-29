@@ -13,20 +13,26 @@
 #include "rtc.h"
 #endif
 
-uint32_t mem_init(uint32_t low, uint32_t high) {
+static uint32_t mem_l;
+static uint32_t mem_h;
+
+uint32_t k_get_mem() {
   uint32_t mem = 1024;
-  if (high > 0) {
-    mem += low + (high * 64);
+  if (mem_h > 0) {
+    mem += mem_l + (mem_h * 64);
   } else {
-    mem += low;
+    mem += mem_l;
   }
   return mem;
 }
 
 void kmain(uint32_t mem_low, uint32_t mem_high) {
+  mem_l = mem_low;
+  mem_h = mem_high;
+
   tty_initialize();
 
-  uint32_t total_memory_kb = mem_init(mem_low, mem_high);
+  uint32_t total_memory_kb = k_get_mem();
 
   idt_install();
   pic_remap();
@@ -38,13 +44,6 @@ void kmain(uint32_t mem_low, uint32_t mem_high) {
 #endif
 
   asm volatile("sti"); 
-
-  void *p1 = pmm_alloc_page();
-  void *p2 = pmm_alloc_page();
-  kprintf("Alloc: %p, %p\n", p1, p2);
-  pmm_free_page(p1);
-  void *p3 = pmm_alloc_page(); 
-  kprintf("After free: %p\n", p3);
 
   welcome();
   sh_main(); 
