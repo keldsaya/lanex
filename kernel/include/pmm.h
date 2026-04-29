@@ -1,17 +1,10 @@
 #ifndef H_PMM
 #define H_PMM
 #include <stdint.h>
+#include <stddef.h>
 
-#define PMM_PAGE_SIZE 4096
-#define PMM_BITMAP_FREE 0
-#define PMM_BITMAP_USED 1
-
-extern uint32_t* pmm_bitmap;
-extern uint32_t pmm_total_pages;
-extern uint32_t pmm_bitmap_size;
-
-void pmm_set_bit(uint32_t page);
-void pmm_clear_bit(uint32_t page);
-int pmm_test_bit(uint32_t page);
+void pmm_init(uint32_t mem_kb);
+void *pmm_alloc_page(void);
+void pmm_free_page(void *addr);
 
 #endif /* H_PMM */
