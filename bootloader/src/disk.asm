@@ -6,7 +6,7 @@ load_kernel:
   xor bx, bx
   mov ah, 0x02
 
-  mov al, 128
+  mov al, 0x80
 
   mov ch, 0
   mov dh, 0
@@ -19,6 +19,6 @@ load_kernel:
 disk_err:
   mov ah, 0x0E
   mov al, 'E'
-  int 0x1000
+  int 0x10
   jmp $
 

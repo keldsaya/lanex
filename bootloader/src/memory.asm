@@ -4,12 +4,20 @@ mem_low: dd 0
 mem_high: dd 0
 
 get_mem_info:
+  xor ax, ax
+  xor bx, bx
   xor cx, cx
   xor dx, dx
   mov ax, 0xE801
   int 0x15
   jc .error
 
+  test ax, ax
+  jnz .store
+  mov ax, cx
+  mov bx, dx
+
+.store:
   mov [mem_low], ax
   mov [mem_high], bx
   ret
