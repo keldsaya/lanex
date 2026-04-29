@@ -31,6 +31,9 @@ start:
   ; jump to protected mode code and switch segment
   jmp 0x08:init_pm   
 
+%include "src/memory.asm"
+%include "src/disk.asm"
+%include "src/gdt.asm"
 
 bits 32 ; 32 bit mode
 init_pm:
@@ -48,10 +51,6 @@ init_pm:
   push dword [mem_low]
 
   jmp 0x10000         ; jump to kernel code
-
-%include "src/memory.asm"
-%include "src/disk.asm"
-%include "src/gdt.asm"
 
 boot_drive: db 0 ; what drive booted from
 

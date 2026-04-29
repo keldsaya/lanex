@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "config.h"
 #include "main.h"
 #include "tty.h"
@@ -14,7 +15,7 @@
 extern uint32_t kernel_start;
 extern uint32_t kernel_end;
 
-void kmain() {
+void kmain(uint32_t mem_low, uint32_t mem_high) {
   tty_initialize();
   
   idt_install();
@@ -26,6 +27,16 @@ void kmain() {
 #endif
 
   asm volatile("sti"); 
+  uint32_t total_memory_kb = 1024;
+
+  if (mem_high > 0) {
+    total_memory_kb += mem_low + (mem_high * 64);
+  } else {
+    total_memory_kb += mem_low;
+  }
+    
+  kprintf("Total memory: %uKB (%uMB)\n", total_memory_kb, 
+      total_memory_kb / 1024);
 
   welcome();
   sh_main(); 

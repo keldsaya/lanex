@@ -1,4 +1,4 @@
-MEM           = 4M
+MEM           = 32M
 BUILD_DIR     = $(CURDIR)/build
 
 REL_BUILD_DIR = build
