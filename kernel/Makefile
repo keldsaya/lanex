@@ -23,7 +23,7 @@ INTERNAL_LDFLAGS = $(LDFLAGS) -T ../linker.ld -Wl,--oformat,binary
 
 all: $(BIN)
 
-$(BIN): $(OBJS) $(LIBC) $(DRIVERS)
+$(BIN): $(OBJS) $(LIBC) $(DRIVERS) $(FS)
 	@echo "  LD      $(subst $(abspath ..)/,,$@)"
 	@$(CC) $(INTERNAL_LDFLAGS) -o $@ $(OBJS) $(LIBS) -lgcc
 
@@ -48,10 +48,10 @@ $(BUILD_DIR)/kernel/config.h: $(CURDIR)/../.config
 	@echo "#ifndef _CONFIG_H_" >> $@
 	@echo "#define _CONFIG_H_" >> $@
 	@echo "" >> $@
-	@echo "/* Enabled drivers (y): */" >> $@
+	@echo "/* Enabled configs (y): */" >> $@
 	@grep "^CONFIG_.*=y" $< | sed 's/=y$$/ 1/' | sed 's/^/#define /' >> $@
 	@echo "" >> $@
-	@echo "/* Disabled drivers (n): */" >> $@
+	@echo "/* Disabled configs (n): */" >> $@
 	@grep "^CONFIG_.*=n" $< | sed 's/=n$$//' | sed 's/^/#undef /' >> $@
 	@echo "" >> $@
 	@echo "#endif" >> $@
