@@ -8,10 +8,10 @@
 #define cursor_enable(start, end) do {} while(0)
 #define cursor_update(x, y) do {} while(0)
 #else
-#include "cursor.h"
+#include "cursor/cursor.h"
 #endif
 
-#include "vga.h"
+#include "vga/vga.h"
 
 size_t tty_row;
 size_t tty_column;

@@ -1,26 +1,35 @@
 SRC_DIR = src
-D_BUILD_DIR = $(BUILD_DIR)/drivers
+DRIVERS_BUILD_DIR = $(BUILD_DIR)/drivers
 
 -include $(CURDIR)/../.config
 -include $(CURDIR)/Kconfig.include
 
-OBJS = $(addprefix $(D_BUILD_DIR)/, $(DRIVER_OBJS))
-LIB_DRIVERS = $(D_BUILD_DIR)/drivers.a
+DRIVERS_DIRS = $(DRIVERS-y)
 
-INTERNAL_CFLAGS = $(CFLAGS) -Iinclude -I../kernel/include -I$(BUILD_DIR)/kernel
+LIB_DRIVERS = $(DRIVERS_BUILD_DIR)/drivers.a
+REL_LIB_DRIVERS = $(subst $(abspath ..)/,,$(LIB_DRIVERS))
+
+INTERNAL_CFLAGS = $(CFLAGS) -I../../kernel/include -I$(BUILD_DIR)/kernel
+
+DRIVER_STAMPS = $(addprefix $(DRIVERS_BUILD_DIR)/, $(DRIVERS_DIRS:=.stamp))
+
+.PHONY: all clean
 
 all: $(LIB_DRIVERS)
 
-$(LIB_DRIVERS): $(OBJS)
-	@echo "  AR      drivers.a ($(DRIVERS-y))"
-	@mkdir -p $(dir $@)
-	@rm -f $@
-	@$(AR) rcs $@ $(OBJS)
+OBJS_ALL = $(foreach mod,$(DRIVERS_DIRS),$(wildcard $(DRIVERS_BUILD_DIR)/$(mod)/*.c.o))
 
-$(D_BUILD_DIR)/%.c.o: $(SRC_DIR)/%.c
-	@echo "  CC      drivers/$<"
-	@mkdir -p $(D_BUILD_DIR)
-	@$(CC) $(INTERNAL_CFLAGS) -c $< -o $@
+$(LIB_DRIVERS): $(DRIVER_STAMPS)
+	@echo "  AR      $(REL_LIB_DRIVERS) ($(DRIVERS-y))"
+	@mkdir -p $(dir $@)
+	@$(AR) rcs $@ $(OBJS_ALL)
+
+$(DRIVERS_BUILD_DIR)/%.stamp:
+	@$(MAKE) -C $* \
+		MODULE=$* \
+		OBJ_DIR=$(abspath $(DRIVERS_BUILD_DIR)/$*) \
+		FS_CFLAGS="$(INTERNAL_CFLAGS)"
+	@touch $@
 
 clean:
-	@rm -rf $(D_BUILD_DIR)
+	@rm -rf $(DRIVERS_BUILD_DIR)
