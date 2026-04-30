@@ -3,6 +3,7 @@
 *.iso
 *.img
 *.a
+*.stamp
 .config
 .config.old
 build/kernel/config.h
