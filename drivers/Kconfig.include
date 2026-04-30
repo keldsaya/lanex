@@ -1,4 +1,3 @@
-# drivers/Kconfig.include 
 -include $(CONFIG_FILE)
 
 DRIVERS-y =

@@ -9,8 +9,12 @@ KERNEL_OBJS = entry.asm.o main.c.o io.c.o \
 
 OBJS = $(addprefix $(BUILD_DIR)/kernel/, $(KERNEL_OBJS))
 BIN  = $(BUILD_DIR)/kernel.bin
+
 LIBC = $(BUILD_DIR)/libc/libc.a
 DRIVERS = $(BUILD_DIR)/drivers/drivers.a
+FS = $(BUILD_DIR)/fs/fs.a
+
+LIBS = $(LIBC) $(DRIVERS) $(FS)
 
 INTERNAL_CFLAGS = $(CFLAGS) -I$(LIBC_DIR)/include -Iinclude -I$(DRIVERS_DIR)/include
 INTERNAL_LDFLAGS = $(LDFLAGS) -T ../linker.ld -Wl,--oformat,binary
@@ -21,7 +25,7 @@ all: $(BIN)
 
 $(BIN): $(OBJS) $(LIBC) $(DRIVERS)
 	@echo "  LD      $(subst $(abspath ..)/,,$@)"
-	@$(CC) $(INTERNAL_LDFLAGS) -o $@ $(OBJS) $(DRIVERS) $(LIBC) -lgcc
+	@$(CC) $(INTERNAL_LDFLAGS) -o $@ $(OBJS) $(LIBS) -lgcc
 
 $(BUILD_DIR)/kernel/%.c.o: $(SRC_DIR)/%.c $(BUILD_DIR)/kernel/config.h
 	@echo "  CC      $<"

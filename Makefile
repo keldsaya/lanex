@@ -34,7 +34,7 @@ ifeq ($(wildcard .config),)
   NEED_DEFCONFIG = 1
 endif
 
-.PHONY: all clean run bootloader libc kernel drivers defconfig menuconfig
+.PHONY: all clean run bootloader libc kernel drivers fs defconfig menuconfig
 
 ifeq ($(NEED_DEFCONFIG),1)
 all: defconfig
@@ -45,7 +45,7 @@ endif
 
 all_real: $(IMG)
 
-$(IMG): bootloader libc drivers kernel
+$(IMG): bootloader libc drivers fs kernel
 	@echo "  IMG     $(REL_IMG)"
 	@cat $(BOOT_BIN) $(KERNEL_BIN) > $(IMG)
 	@truncate -s 1440k $(IMG)
@@ -62,6 +62,9 @@ bootloader:
 drivers:
 	@$(MAKE) -C drivers
 
+fs:
+	@$(MAKE) -C fs
+
 run: all
 	@echo "  RUN     $(REL_IMG)"
 	@qemu-system-i386 -m $(MEM) -drive file=$(IMG),format=raw,index=0,media=disk
@@ -75,26 +78,10 @@ menuconfig:
 		echo "No .config found, running defconfig first"; \
 		$(MAKE) defconfig; \
 	fi
-	@echo "========================================"
-	@echo "Manual config: edit .config file"
-	@echo "========================================"
-	@echo "Available options:"
-	@echo "  CONFIG_DRIVER_VGA     - VGA text mode (y/n)"
-	@echo "  CONFIG_DRIVER_CURSOR  - Hardware cursor (depends on VGA)"
-	@echo "  CONFIG_DRIVER_KEYBOARD - PS/2 keyboard"
-	@echo "  CONFIG_DRIVER_ATA     - ATA/IDE disk driver"
-	@echo "  CONFIG_DRIVER_POWER   - Shutdown/reboot"
-	@echo "  CONFIG_DRIVER_RTC     - Real Time Clock"
-	@echo ""
-	@echo "Current configuration:"
-	@if [ -f .config ]; then \
-		cat .config | grep "CONFIG_" || echo "  (empty)"; \
-	else \
-		echo "  (no config)"; \
-	fi
-	@echo ""
-	@echo "To change: vim .config"
-	@echo "To reset: make defconfig"
+
+	@$(MAKE) -C user/confeditor confeditor
+	@echo "  RUN     config_editor"
+	@$(BUILD_DIR)/config_editor
 
 clean:
 	@echo "  CLN     $(REL_BUILD_DIR)"

@@ -22,8 +22,5 @@ $(D_BUILD_DIR)/%.c.o: $(SRC_DIR)/%.c
 	@mkdir -p $(D_BUILD_DIR)
 	@$(CC) $(INTERNAL_CFLAGS) -c $< -o $@
 
-menuconfig:
-	@echo "Manual config: edit .config file"
-
 clean:
 	@rm -rf $(D_BUILD_DIR)
