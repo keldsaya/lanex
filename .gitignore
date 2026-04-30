@@ -6,4 +6,5 @@
 *.stamp
 .config
 .config.old
+build/
 build/kernel/config.h
