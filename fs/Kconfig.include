@@ -1,0 +1,6 @@
+-include $(CONFIG_FILE)
+
+FS-y =
+FS-$(CONFIG_FS_FAT32)      += fat32
+
+FS_OBJS = $(addsuffix .c.o, $(FS-y))

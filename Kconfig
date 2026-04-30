@@ -1,6 +1,4 @@
-# drivers/Kconfig
 menu "Device Drivers"
-
 
 config DRIVER_VGA
   bool "VGA text mode driver"
@@ -38,5 +36,15 @@ config DRIVER_RTC
   default y
   help
     CMOS RTC driver for time/date
+
+endmenu
+
+menu "File Systems"
+
+config FS_FAT32
+  bool "FAT32 FS support"
+  default y
+  help
+    FAT32 file system support
 
 endmenu
