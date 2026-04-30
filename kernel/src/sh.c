@@ -3,12 +3,12 @@
 #include "config.h"
 #include "sh.h"
 #include "tty.h"
-#include "keyboard.h"
+#include "keyboard/keyboard.h"
 #include "pit.h"     
 #include "pmm.h"     
 #include "messages.h"
-#include "power.h"
-#include "rtc.h"
+#include "power/power.h"
+#include "rtc/rtc.h"
 #include "main.h"
 
 const char prompt[] = "> ";

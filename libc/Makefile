@@ -19,6 +19,6 @@ $(LIB): $(OBJS)
 	@$(AR) rcs $@ $(OBJS) 
 
 $(L_BUILD_DIR)/%.c.o: $(SRC_DIR)/%.c
-	@echo "  CC      $<"
+	@echo "  CC      libc/$<"
 	@mkdir -p $(L_BUILD_DIR)
 	@$(CC) $(INTERNAL_CFLAGS) -c $< -o $@

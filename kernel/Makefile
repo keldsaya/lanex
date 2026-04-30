@@ -1,5 +1,6 @@
 LIBC_DIR = $(abspath ../libc)
 DRIVERS_DIR = $(abspath ../drivers)
+FS_DIR = $(abspath ../fs)
 SRC_DIR  = src
 
 KERNEL_OBJS = entry.asm.o main.c.o io.c.o \
@@ -16,7 +17,7 @@ FS = $(BUILD_DIR)/fs/fs.a
 
 LIBS = $(LIBC) $(DRIVERS) $(FS)
 
-INTERNAL_CFLAGS = $(CFLAGS) -I$(LIBC_DIR)/include -Iinclude -I$(DRIVERS_DIR)/include
+INTERNAL_CFLAGS = $(CFLAGS) -I$(LIBC_DIR)/include -Iinclude -I$(DRIVERS_DIR) -I$(FS_DIR)
 INTERNAL_LDFLAGS = $(LDFLAGS) -T ../linker.ld -Wl,--oformat,binary
 
 .PHONY: all clean

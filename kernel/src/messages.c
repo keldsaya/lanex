@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "messages.h"
-#include "vga.h"
 #include "tty.h"
+#include "vga/vga.h"
 
 void kpanic(const char *msg) {
   tty_clear();
