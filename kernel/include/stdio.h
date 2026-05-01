@@ -3,4 +3,4 @@
 
 void kprintf(const char *fmt, ...);
 
-#endif /* H_STDIO */ 
+#endif /* H_STDIO */

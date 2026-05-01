@@ -1,10 +1,10 @@
-#include <string.h>
 #include <stdint.h>
+#include <string.h>
 
-char* utoa(unsigned int value, char* str, int base) {
-  char* rc;
-  char* ptr;
-  char* low;
+char *utoa(unsigned int value, char *str, int base) {
+  char *rc;
+  char *ptr;
+  char *low;
 
   rc = ptr = str;
 

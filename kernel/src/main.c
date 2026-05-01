@@ -1,13 +1,13 @@
-#include <stdio.h>
-#include "config.h"
 #include "main.h"
-#include "tty.h"
+#include "config.h"
 #include "idt.h"
+#include "messages.h"
 #include "pic.h"
 #include "pit.h"
 #include "pmm.h"
 #include "sh.h"
-#include "messages.h"
+#include "tty.h"
+#include <stdio.h>
 
 #ifdef CONFIG_DRIVER_RTC
 #include "rtc/rtc.h"
@@ -38,17 +38,17 @@ void kmain(uint32_t mem_low, uint32_t mem_high) {
   pic_remap();
   pit_init(1000);
   pmm_init(total_memory_kb);
-  
+
 #ifdef CONFIG_DRIVER_RTC
   rtc_init(1024);
 #endif
 
-  asm volatile("sti"); 
+  asm volatile("sti");
 
   welcome();
-  sh_main(); 
-  
-  for(;;) {
+  sh_main();
+
+  for (;;) {
     kpanic("Entered in main().loop");
   }
 }
