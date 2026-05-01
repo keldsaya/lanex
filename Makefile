@@ -32,29 +32,31 @@ ifeq ($(wildcard $(CONFIG_FILE)),)
 $(shell $(SCRIPTS_DIR)/kconfig.sh def)
 endif
 
-.PHONY: all clean run bootloader libc kernel drivers fs defconfig menuconfig scripts-executable
+.PHONY: all clean run bootloader libc drivers fs kernel objects archives
 
 all: $(IMG)
 
-$(IMG): bootloader libc drivers fs kernel
+objects:
+	$(MAKE) -C libc objects
+	$(MAKE) -C drivers objects
+	$(MAKE) -C fs objects
+	$(MAKE) -C kernel objects
+
+archives: objects
+	$(MAKE) -C libc archive
+	$(MAKE) -C drivers archive
+	$(MAKE) -C fs archive
+
+kernel: archives
+	$(MAKE) -C kernel kernel
+
+bootloader:
+	$(MAKE) -C bootloader
+
+$(IMG): bootloader kernel
 	@echo "  IMG     build/lanex.img"
 	@cat $(BOOT_BIN) $(KERNEL_BIN) > $(IMG)
 	@truncate -s 1440k $(IMG)
-
-libc:
-	@$(MAKE) -C libc
-
-kernel:
-	@$(MAKE) -C kernel
-
-bootloader:
-	@$(MAKE) -C bootloader
-
-drivers:
-	@$(MAKE) -C drivers
-
-fs:
-	@$(MAKE) -C fs
 
 run: all
 	@echo "  RUN     build/lanex.img"
@@ -66,7 +68,7 @@ defconfig:
 
 menuconfig:
 	@echo "  MENUCONFIG"
-	@$(SCRIPTS_DIR)/kconfig.sh menu
+	@$(SCRIPLES_DIR)/kconfig.sh menu
 
 format:
 	@echo "  FORMAT"

@@ -3,9 +3,11 @@ SRCS = $(wildcard *.c)
 OBJS = $(SRCS:.c=.c.o)
 FULL_OBJS = $(addprefix $(OBJ_DIR)/,$(OBJS))
 
-.PHONY: all
+.PHONY: all objects
 
-all: $(FULL_OBJS)
+all: objects
+
+objects: $(FULL_OBJS)
 
 $(OBJ_DIR)/%.c.o: %.c
 	@echo "  CC      drivers/$(MODULE)/$<"
