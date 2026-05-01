@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define PIT_FREQUENCY 1193182  
+#define PIT_FREQUENCY 1193182
 
 #define PIT_COMMAND_PORT 0x43
 #define PIT_CHANNEL0_PORT 0x40

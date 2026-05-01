@@ -1,15 +1,15 @@
-#include <string.h>
-#include <stdio.h>
-#include "config.h"
 #include "sh.h"
-#include "tty.h"
+#include "config.h"
 #include "keyboard/keyboard.h"
+#include "main.h"
+#include "messages.h"
 #include "pit.h"
 #include "pmm.h"
-#include "messages.h"
 #include "power/power.h"
 #include "rtc/rtc.h"
-#include "main.h"
+#include "tty.h"
+#include <stdio.h>
+#include <string.h>
 
 const char prompt[] = "> ";
 char line[MAX_LINE];
@@ -20,9 +20,11 @@ static int history_count = 0;
 static int history_nav = -1;
 
 void add_history(const char *cmd) {
-  if (cmd[0] == 0 || cmd[0] == '\0') return;
+  if (cmd[0] == 0 || cmd[0] == '\0')
+    return;
   if (history_count > 0 &&
-      strcmp(history[(history_count - 1) % HIST_SIZE], cmd) == 0) return;
+      strcmp(history[(history_count - 1) % HIST_SIZE], cmd) == 0)
+    return;
 
   strcpy(history[history_count % HIST_SIZE], cmd);
   history_count++;
@@ -52,8 +54,8 @@ void execute(const char *cmd) {
     uint32_t total = k_get_mem();
     uint32_t free_pages = pmm_free_pages_count();
     uint32_t free_kb = free_pages * 4;
-    kprintf("Total: %uKB, Free: %uKB, Used: %uKB\n",
-            total, free_kb, total - free_kb);
+    kprintf("Total: %uKB, Free: %uKB, Used: %uKB\n", total, free_kb,
+            total - free_kb);
   } else if (strcmp(cmd, "uptime") == 0) {
     uint32_t ticks = pit_get_ticks();
     kprintf("uptime: %d seconds\n", ticks / 1000);
@@ -103,13 +105,12 @@ void sh_init() {
   history_count = 0;
 }
 
-void sh_prompt() {
-  kprintf(prompt);
-}
+void sh_prompt() { kprintf(prompt); }
 
 void sh_char(const char c) {
   if (c == KEY_UP || c == KEY_DOWN) {
-    if (history_count == 0) return;
+    if (history_count == 0)
+      return;
 
     if (c == KEY_UP) {
       if (history_nav == -1) {
@@ -118,7 +119,8 @@ void sh_char(const char c) {
         history_nav--;
       }
     } else {
-      if (history_nav == -1) return;
+      if (history_nav == -1)
+        return;
       history_nav++;
       if (history_nav >= history_count) {
         history_nav = -1;

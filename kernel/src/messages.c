@@ -1,7 +1,7 @@
-#include <stdio.h>
 #include "messages.h"
 #include "tty.h"
 #include "vga/vga.h"
+#include <stdio.h>
 
 void kpanic(const char *msg) {
   tty_clear();
@@ -12,7 +12,7 @@ void kpanic(const char *msg) {
   tty_setcolor(VGA_COLOR_LIGHT_GREY);
   kprintf("Kernel panic!: %s\n", msg);
   kprintf("\n\nPlease reboot computer");
-  asm volatile ("cli; hlt");
+  asm volatile("cli; hlt");
 }
 
 void welcome() {

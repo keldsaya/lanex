@@ -1,27 +1,19 @@
-#include "io.h"
 #include "keyboard.h"
+#include "io.h"
 
 const char lower_scancodes[128] = {
-  0, 0, '1', '2', '3', '4', '5', '6',
-  '7', '8', '9', '0', '-', '=', '\b', '\t',
-  'q', 'w', 'e', 'r', 't', 'y', 'u', 'i',
-  'o', 'p', '[', ']', '\n', 0, 'a', 's',
-  'd', 'f', 'g', 'h', 'j', 'k', 'l', ';',
-  '\'', '`', 0, '\\', 'z', 'x', 'c', 'v',
-  'b', 'n', 'm', ',', '.', '/', 0, '*',
-  0, ' ', 0, 0, 0, 0, 0, 0
-};
+    0,   0,    '1',  '2', '3',  '4', '5', '6', '7', '8', '9', '0', '-',
+    '=', '\b', '\t', 'q', 'w',  'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',
+    '[', ']',  '\n', 0,   'a',  's', 'd', 'f', 'g', 'h', 'j', 'k', 'l',
+    ';', '\'', '`',  0,   '\\', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',',
+    '.', '/',  0,    '*', 0,    ' ', 0,   0,   0,   0,   0,   0};
 
 const char upper_scancodes[128] = {
-  0, 0, '!', '@', '#', '$', '%', '^',
-  '&', '*', '(', ')', '_', '+', '\b', '\t',
-  'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I',
-  'O', 'P', '{', '}', '\n', 0, 'A', 'S',
-  'D', 'F', 'G', 'H', 'J', 'K', 'L', ':',
-  '\"', '~', 0, '|', 'Z', 'X', 'C', 'V',
-  'B', 'N', 'M', '<', '>', '?', 0, '*',
-  0, ' ', 0, 0, 0, 0, 0, 0
-};
+    0,   0,    '!',  '@', '#', '$', '%', '^', '&', '*', '(', ')', '_',
+    '+', '\b', '\t', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P',
+    '{', '}',  '\n', 0,   'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L',
+    ':', '\"', '~',  0,   '|', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<',
+    '>', '?',  0,    '*', 0,   ' ', 0,   0,   0,   0,   0,   0};
 
 #define BUF_SIZE 16
 
@@ -37,30 +29,30 @@ void keyboard_handler() {
 
   if (status & 0x01) {
     uint8_t scancode = inb(0x60);
-    if(scancode == 0xE0) {
+    if (scancode == 0xE0) {
       e0_prefix = 1;
       outb(0x20, 0x20);
       return;
     }
-    if(e0_prefix) {
+    if (e0_prefix) {
       e0_prefix = 0;
-      if(scancode == 0x05) {
+      if (scancode == 0x05) {
         buf[head] = KEY_ESC;
         head = (head + 1) % BUF_SIZE;
       }
-      if(scancode == 0x48) {
+      if (scancode == 0x48) {
         buf[head] = KEY_UP;
         head = (head + 1) % BUF_SIZE;
       }
-      if(scancode == 0x50) {
+      if (scancode == 0x50) {
         buf[head] = KEY_DOWN;
         head = (head + 1) % BUF_SIZE;
       }
-      if(scancode == 0x4B) {
+      if (scancode == 0x4B) {
         buf[head] = KEY_LEFT;
         head = (head + 1) % BUF_SIZE;
       }
-      if(scancode == 0x4D) {
+      if (scancode == 0x4D) {
         buf[head] = KEY_RIGHT;
         head = (head + 1) % BUF_SIZE;
       }
@@ -78,11 +70,10 @@ void keyboard_handler() {
       return;
     }
     if (!(scancode & 0x80)) {
-      char c = is_shift ? upper_scancodes[scancode] :
-        lower_scancodes[scancode];
-      if(c != 0) {
+      char c = is_shift ? upper_scancodes[scancode] : lower_scancodes[scancode];
+      if (c != 0) {
         int next_head = (head + 1) % BUF_SIZE;
-        if(scancode < sizeof(lower_scancodes) && c) {
+        if (scancode < sizeof(lower_scancodes) && c) {
           buf[head] = c;
           head = next_head;
         }
@@ -93,7 +84,8 @@ void keyboard_handler() {
 }
 
 char keyboard_get_char() {
-  if(head == tail) return 0;
+  if (head == tail)
+    return 0;
   char c = buf[tail];
   tail = (tail + 1) % BUF_SIZE;
   return c;

@@ -1,9 +1,7 @@
-#include "io.h"
 #include "power.h"
+#include "io.h"
 
-static inline void local_io_wait() {
-  outb(0x80, 0);
-}
+static inline void local_io_wait() { outb(0x80, 0); }
 
 static inline void wait_kbd_buffer() {
   while (inb(0x64) & 0x02) {
@@ -22,9 +20,10 @@ void power_shutdown() {
 
   wait_kbd_buffer();
   outb(0x64, 0xFE);
-  
+
   asm volatile("cli");
-  while(1) asm volatile("hlt");
+  while (1)
+    asm volatile("hlt");
 }
 
 void power_reboot() {
@@ -32,7 +31,7 @@ void power_reboot() {
   outb(0x64, 0xFE);
   local_io_wait();
 
-  outb(0xCF9, 0x06); 
+  outb(0xCF9, 0x06);
   local_io_wait();
 
   uint8_t fast_res = inb(0x92);
@@ -43,10 +42,11 @@ void power_reboot() {
     uint16_t limit;
     uint32_t base;
   } __attribute__((packed)) idtr = {0, 0};
-  
+
   asm volatile("lidt %0" : : "m"(idtr));
-  asm volatile("int $3"); 
+  asm volatile("int $3");
 
   asm volatile("cli");
-  while(1) asm volatile("hlt");
+  while (1)
+    asm volatile("hlt");
 }

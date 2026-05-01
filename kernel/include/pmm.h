@@ -1,7 +1,7 @@
 #ifndef H_PMM
 #define H_PMM
-#include <stdint.h>
 #include <stddef.h>
+#include <stdint.h>
 
 void pmm_init(uint32_t mem_kb);
 void *pmm_alloc_page(void);

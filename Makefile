@@ -68,6 +68,10 @@ menuconfig:
 	@echo "  MENUCONFIG"
 	@$(SCRIPTS_DIR)/kconfig.sh menu
 
+format:
+	@echo "  FORMAT"
+	@$(SCRIPTS_DIR)/format.sh
+
 clean:
 	@echo "  CLN     build"
 	@rm -rf $(BUILD_DIR)

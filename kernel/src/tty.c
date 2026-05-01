@@ -1,12 +1,16 @@
-#include <string.h>
 #include "tty.h"
 #include "config.h"
+#include <string.h>
 
 #ifdef CONFIG_DRIVER_VGA
 
 #ifndef CONFIG_DRIVER_CURSOR
-#define cursor_enable(start, end) do {} while(0)
-#define cursor_update(x, y) do {} while(0)
+#define cursor_enable(start, end)                                              \
+  do {                                                                         \
+  } while (0)
+#define cursor_update(x, y)                                                    \
+  do {                                                                         \
+  } while (0)
 #else
 #include "cursor/cursor.h"
 #endif
@@ -39,7 +43,7 @@ void tty_clear_current_row() {
 }
 
 void tty_initialize(void) {
-  cursor_enable(14,15);
+  cursor_enable(14, 15);
   tty_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
   tty_clear();
 }
@@ -91,7 +95,7 @@ void tty_putchar(char c) {
     }
   }
 
-  if(tty_row >= VGA_HEIGHT) {
+  if (tty_row >= VGA_HEIGHT) {
     tty_scroll();
     tty_row = VGA_HEIGHT - 1;
   }
@@ -121,7 +125,7 @@ char tty_last_char() {
   return (char)(tty_buffer[index] & 0xFF);
 }
 
-void tty_move_cur(const int v) { 
+void tty_move_cur(const int v) {
   tty_column += v;
   cursor_update(tty_column, tty_row);
 }
@@ -133,7 +137,10 @@ void tty_clear_current_row(void) {}
 void tty_initialize(void) {}
 void tty_setcolor(uint8_t color) { (void)color; }
 void tty_putchar(char c) { (void)c; }
-void tty_write(const char *data, size_t size) { (void)data; (void)size; }
+void tty_write(const char *data, size_t size) {
+  (void)data;
+  (void)size;
+}
 char tty_last_char(void) { return 0; }
 void tty_move_cur(const int v) { (void)v }
 
