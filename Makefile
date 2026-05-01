@@ -1,8 +1,6 @@
 MEM           = 4M
 BUILD_DIR     = $(CURDIR)/build
-
-REL_BUILD_DIR = build
-REL_IMG       = $(REL_BUILD_DIR)/lanex.img
+SCRIPTS_DIR   = $(CURDIR)/scripts
 
 IMG           = $(BUILD_DIR)/lanex.img
 BOOT_BIN      = $(BUILD_DIR)/boot.bin
@@ -15,7 +13,7 @@ NASM = nasm
 
 CFLAGS      = -std=gnu99 -ffreestanding -O2 -Wall -Wextra
 LDFLAGS     = -ffreestanding -O2 -nostdlib
-MAKEFLAGS += -s --no-print-directory
+MAKEFLAGS  += -s --no-print-directory
 
 ifeq ($(deb), 1)
   CC      = gcc -m32
@@ -30,23 +28,16 @@ DEFCONFIG_FILE = user/defconfig
 export CC AS AR NASM CFLAGS LDFLAGS BUILD_DIR
 export CONFIG_FILE=$(CURDIR)/.config
 
-ifeq ($(wildcard .config),)
-  NEED_DEFCONFIG = 1
+ifeq ($(wildcard $(CONFIG_FILE)),)
+$(shell $(SCRIPTS_DIR)/kconfig.sh def)
 endif
 
-.PHONY: all clean run bootloader libc kernel drivers fs defconfig menuconfig
+.PHONY: all clean run bootloader libc kernel drivers fs defconfig menuconfig scripts-executable
 
-ifeq ($(NEED_DEFCONFIG),1)
-all: defconfig
-	@$(MAKE) --no-print-directory all_real
-else
-all: all_real
-endif
-
-all_real: $(IMG)
+all: $(IMG)
 
 $(IMG): bootloader libc drivers fs kernel
-	@echo "  IMG     $(REL_IMG)"
+	@echo "  IMG     build/lanex.img"
 	@cat $(BOOT_BIN) $(KERNEL_BIN) > $(IMG)
 	@truncate -s 1440k $(IMG)
 
@@ -66,27 +57,17 @@ fs:
 	@$(MAKE) -C fs
 
 run: all
-	@echo "  RUN     $(REL_IMG)"
-	@qemu-system-i386 -m $(MEM) -drive file=$(IMG),format=raw,index=0,media=disk
+	@echo "  RUN     build/lanex.img"
+	@$(SCRIPTS_DIR)/qemu.sh $(MEM) $(IMG)
 
 defconfig:
 	@echo "  DEFCONFIG"
-	@cp $(DEFCONFIG_FILE) $(CONFIG_FILE)
+	@$(SCRIPTS_DIR)/kconfig.sh def
 
 menuconfig:
-	@if [ ! -f .config ]; then \
-		echo "No .config found, running defconfig first"; \
-		$(MAKE) defconfig; \
-	fi
-
-	@$(MAKE) -C user/confeditor confeditor
-	@echo "  RUN     config_editor"
-	@$(BUILD_DIR)/config_editor
+	@echo "  MENUCONFIG"
+	@$(SCRIPTS_DIR)/kconfig.sh menu
 
 clean:
-	@echo "  CLN     $(REL_BUILD_DIR)"
+	@echo "  CLN     build"
 	@rm -rf $(BUILD_DIR)
-
-clean-drivers:
-	@echo "  CLN     $(REL_BUILD_DIR)/drivers"
-	@rm -rf $(BUILD_DIR)/drivers
