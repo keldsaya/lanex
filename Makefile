@@ -68,7 +68,7 @@ defconfig:
 
 menuconfig:
 	@echo "  MENUCONFIG"
-	@$(SCRIPLES_DIR)/kconfig.sh menu
+	@$(SCRIPTS_DIR)/kconfig.sh menu
 
 format:
 	@echo "  FORMAT"
