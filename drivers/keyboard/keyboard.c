@@ -2,7 +2,7 @@
 #include "keyboard.h"
 
 const char lower_scancodes[128] = {
-  0, 27, '1', '2', '3', '4', '5', '6',
+  0, 0, '1', '2', '3', '4', '5', '6',
   '7', '8', '9', '0', '-', '=', '\b', '\t',
   'q', 'w', 'e', 'r', 't', 'y', 'u', 'i',
   'o', 'p', '[', ']', '\n', 0, 'a', 's',
@@ -13,7 +13,7 @@ const char lower_scancodes[128] = {
 };
 
 const char upper_scancodes[128] = {
-  0, 27, '!', '@', '#', '$', '%', '^',
+  0, 0, '!', '@', '#', '$', '%', '^',
   '&', '*', '(', ')', '_', '+', '\b', '\t',
   'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I',
   'O', 'P', '{', '}', '\n', 0, 'A', 'S',
@@ -44,6 +44,10 @@ void keyboard_handler() {
     }
     if(e0_prefix) {
       e0_prefix = 0;
+      if(scancode == 0x05) {
+        buf[head] = KEY_ESC;
+        head = (head + 1) % BUF_SIZE;
+      }
       if(scancode == 0x48) {
         buf[head] = KEY_UP;
         head = (head + 1) % BUF_SIZE;
