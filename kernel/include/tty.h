@@ -11,5 +11,6 @@ void tty_write(const char *data, size_t size);
 void tty_clear(void);
 void tty_clear_current_row(void);
 char tty_last_char(void);
+void tty_move_cur(const int v);
 
 #endif

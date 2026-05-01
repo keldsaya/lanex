@@ -73,6 +73,7 @@ void tty_putchar(char c) {
     tty_column = 0;
   } else if (c == '\r') {
     tty_column = 0;
+  } else if (c == '\t') {
   } else if (c == '\b') {
     if (tty_column > 0) {
       tty_column--;
@@ -120,6 +121,11 @@ char tty_last_char() {
   return (char)(tty_buffer[index] & 0xFF);
 }
 
+void tty_move_cur(const int v) { 
+  tty_column += v;
+  cursor_update(tty_column, tty_row);
+}
+
 #else /* !CONFIG_DRIVER_VGA */
 
 void tty_clear(void) {}
@@ -129,5 +135,6 @@ void tty_setcolor(uint8_t color) { (void)color; }
 void tty_putchar(char c) { (void)c; }
 void tty_write(const char *data, size_t size) { (void)data; (void)size; }
 char tty_last_char(void) { return 0; }
+void tty_move_cur(const int v) { (void)v }
 
 #endif /* CONFIG_DRIVER_VGA */

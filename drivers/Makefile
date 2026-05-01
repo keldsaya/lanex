@@ -11,25 +11,23 @@ REL_LIB_DRIVERS = $(subst $(abspath ..)/,,$(LIB_DRIVERS))
 
 INTERNAL_CFLAGS = $(CFLAGS) -I../../kernel/include -I$(BUILD_DIR)/kernel
 
-DRIVER_STAMPS = $(addprefix $(DRIVERS_BUILD_DIR)/, $(DRIVERS_DIRS:=.stamp))
+DRIVER_OBJS = $(foreach mod,$(DRIVERS_DIRS), \
+    $(wildcard $(DRIVERS_BUILD_DIR)/$(mod)/*.c.o))
 
 .PHONY: all clean
 
 all: $(LIB_DRIVERS)
 
-OBJS_ALL = $(foreach mod,$(DRIVERS_DIRS),$(wildcard $(DRIVERS_BUILD_DIR)/$(mod)/*.c.o))
-
-$(LIB_DRIVERS): $(DRIVER_STAMPS)
-	@echo "  AR      $(REL_LIB_DRIVERS) ($(DRIVERS-y))"
-	@mkdir -p $(dir $@)
-	@$(AR) rcs $@ $(OBJS_ALL)
-
-$(DRIVERS_BUILD_DIR)/%.stamp:
+$(DRIVERS_BUILD_DIR)/%: %/
 	@$(MAKE) -C $* \
 		MODULE=$* \
 		OBJ_DIR=$(abspath $(DRIVERS_BUILD_DIR)/$*) \
 		FS_CFLAGS="$(INTERNAL_CFLAGS)"
-	@touch $@
+
+$(LIB_DRIVERS): $(DRIVERS_DIRS:%=$(DRIVERS_BUILD_DIR)/%)
+	@echo "  AR      $(REL_LIB_DRIVERS) ($(DRIVERS-y))"
+	@mkdir -p $(dir $@)
+	@$(AR) rcs $@ $(DRIVER_OBJS)
 
 clean:
 	@rm -rf $(DRIVERS_BUILD_DIR)
