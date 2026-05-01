@@ -14,17 +14,22 @@ INTERNAL_CFLAGS = $(CFLAGS) -I../../kernel/include -I$(BUILD_DIR)/kernel
 DRIVER_OBJS = $(foreach mod,$(DRIVERS_DIRS), \
     $(wildcard $(DRIVERS_BUILD_DIR)/$(mod)/*.c.o))
 
-.PHONY: all clean
+.PHONY: all objects archive clean
 
-all: $(LIB_DRIVERS)
+all: archive
+
+objects: $(DRIVERS_DIRS:%=$(DRIVERS_BUILD_DIR)/%)
+
+archive: $(LIB_DRIVERS)
 
 $(DRIVERS_BUILD_DIR)/%: %/
 	@$(MAKE) -C $* \
 		MODULE=$* \
 		OBJ_DIR=$(abspath $(DRIVERS_BUILD_DIR)/$*) \
-		FS_CFLAGS="$(INTERNAL_CFLAGS)"
+		FS_CFLAGS="$(INTERNAL_CFLAGS)" \
+		objects
 
-$(LIB_DRIVERS): $(DRIVERS_DIRS:%=$(DRIVERS_BUILD_DIR)/%)
+$(LIB_DRIVERS): $(DRIVER_OBJS)
 	@echo "  AR      $(REL_LIB_DRIVERS) ($(DRIVERS-y))"
 	@mkdir -p $(dir $@)
 	@$(AR) rcs $@ $(DRIVER_OBJS)

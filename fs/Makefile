@@ -14,18 +14,22 @@ INTERNAL_CFLAGS = $(CFLAGS) -Iinclude -I../kernel/include -I$(BUILD_DIR)/kernel
 FS_OBJS = $(foreach mod,$(FS_DIRS), \
     $(wildcard $(FS_BUILD_DIR)/$(mod)/*.c.o))
 
-.PHONY: all clean
+.PHONY: all objects archive clean
 
-all: $(LIB_FS)
+all: archive
+
+objects: $(FS_DIRS:%=$(FS_BUILD_DIR)/%)
+
+archive: $(LIB_FS)
 
 $(FS_BUILD_DIR)/%: %/
-	@echo "  BUILD   fs/$*"
 	@$(MAKE) -C $* \
 		MODULE=$* \
 		OBJ_DIR=$(abspath $(FS_BUILD_DIR)/$*) \
-		FS_CFLAGS="$(INTERNAL_CFLAGS)"
+		FS_CFLAGS="$(INTERNAL_CFLAGS)" \
+		objects
 
-$(LIB_FS): $(FS_DIRS:%=$(FS_BUILD_DIR)/%)
+$(LIB_FS): $(FS_OBJS)
 	@echo "  AR      $(REL_LIB_FS) ($(FS-y))"
 	@mkdir -p $(dir $@)
 	@$(AR) rcs $@ $(FS_OBJS)

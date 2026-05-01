@@ -20,26 +20,28 @@ LIBS = $(LIBC) $(DRIVERS) $(FS)
 INTERNAL_CFLAGS = $(CFLAGS) -I$(LIBC_DIR)/include -Iinclude -I$(DRIVERS_DIR) -I$(FS_DIR)
 INTERNAL_LDFLAGS = $(LDFLAGS) -T ../linker.ld -Wl,--oformat,binary
 
-.PHONY: all clean
+.PHONY: all objects kernel clean
 
-all: $(BIN)
+all: kernel
 
-$(BIN): $(OBJS) $(LIBC) $(DRIVERS) $(FS)
-	@echo "  LD      $(subst $(abspath ..)/,,$@)"
-	@$(CC) $(INTERNAL_LDFLAGS) -o $@ $(OBJS) $(LIBS) -lgcc
+objects: $(OBJS)
+
+kernel: objects $(LIBS)
+	@echo "  LD      $(subst $(abspath ..)/,,$(BIN))"
+	@$(CC) $(INTERNAL_LDFLAGS) -o $(BIN) $(OBJS) $(LIBS) -lgcc
 
 $(BUILD_DIR)/kernel/%.c.o: $(SRC_DIR)/%.c $(BUILD_DIR)/kernel/config.h
-	@echo "  CC      $<"
+	@echo "  CC      kernel/$<"
 	@mkdir -p $(dir $@)
 	@$(CC) $(INTERNAL_CFLAGS) -I$(BUILD_DIR)/kernel -c $< -o $@
 
 $(BUILD_DIR)/kernel/%.s.o: $(SRC_DIR)/%.s
-	@echo "  ASM     $<"
+	@echo "  ASM     kernel/$<"
 	@mkdir -p $(dir $@)
 	@$(AS) $< -o $@
 
 $(BUILD_DIR)/kernel/%.asm.o: $(SRC_DIR)/%.asm
-	@echo "  ASM     $<"
+	@echo "  ASM     kernel/$<"
 	@mkdir -p $(dir $@)
 	@$(NASM) -f elf32 $< -o $@
 
@@ -56,6 +58,6 @@ $(BUILD_DIR)/kernel/config.h: $(CURDIR)/../.config
 	@grep "^CONFIG_.*=n" $< | sed 's/=n$$//' | sed 's/^/#undef /' >> $@
 	@echo "" >> $@
 	@echo "#endif" >> $@
-  
+
 clean:
 	@rm -f $(OBJS) $(BIN)
