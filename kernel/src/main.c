@@ -1,5 +1,5 @@
 #include "main.h"
-#include "config.h"
+#include <lanex/config.h>
 #include "idt.h"
 #include "messages.h"
 #include "pic.h"

@@ -1,5 +1,5 @@
 #include "idt.h"
-#include "config.h"
+#include <lanex/config.h>
 #include "messages.h"
 
 struct idt_entry idt[256];

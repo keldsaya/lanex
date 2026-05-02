@@ -1,5 +1,5 @@
 #include "sh.h"
-#include "config.h"
+#include <lanex/config.h>
 #include "keyboard/keyboard.h"
 #include "main.h"
 #include "messages.h"

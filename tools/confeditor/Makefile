@@ -7,7 +7,7 @@ CONFEDITOR_OUT = $(BUILD_DIR)/config_editor
 all: confeditor
 
 confeditor: $(CONFEDITOR_SRC)
-	@echo "  CC      user/confeditor/$<"
+	@echo "  CC       user/confeditor/$<"
 	@mkdir -p $(dir $(CONFEDITOR_OUT))
 	@gcc -Wall -Wextra -O2 -o $(CONFEDITOR_OUT) $<
 

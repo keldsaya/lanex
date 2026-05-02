@@ -1,5 +1,5 @@
 #include "tty.h"
-#include "config.h"
+#include <lanex/config.h>
 #include <string.h>
 
 #ifdef CONFIG_DRIVER_VGA
@@ -142,6 +142,6 @@ void tty_write(const char *data, size_t size) {
   (void)size;
 }
 char tty_last_char(void) { return 0; }
-void tty_move_cur(const int v) { (void)v }
+void tty_move_cur(const int v) { (void)v; }
 
 #endif /* CONFIG_DRIVER_VGA */
