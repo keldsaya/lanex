@@ -1,5 +1,6 @@
-SRC_DIR = src
-FS_BUILD_DIR = $(BUILD_DIR)/fs
+MAKEFLAGS += -rR -s
+
+FS_BUILD_DIR  = $(BUILD_DIR)/fs
 CONFIG_HEADER = $(abspath ../include/lanex/config.h)
 
 -include $(CURDIR)/../.config
@@ -7,7 +8,7 @@ CONFIG_HEADER = $(abspath ../include/lanex/config.h)
 
 FS_DIRS = $(FS-y)
 
-LIB_FS = $(FS_BUILD_DIR)/fs.a
+LIB_FS     = $(FS_BUILD_DIR)/fs.a
 REL_LIB_FS = $(subst $(abspath ..)/,,$(LIB_FS))
 
 INTERNAL_CFLAGS = $(CFLAGS) -I$(abspath ../include) -I../kernel/include
