@@ -16,9 +16,9 @@ LDFLAGS     = -ffreestanding -O2 -nostdlib
 MAKEFLAGS  += -s --no-print-directory
 
 ifeq ($(deb), 1)
-  CC      = gcc -m32
-  AS      = as --32
-  AR      = ar
+  CC       = gcc -m32
+  AS       = as --32
+  AR       = ar
   CFLAGS  += -fno-stack-protector -fno-pic
   LDFLAGS += -m32
 endif
@@ -32,7 +32,7 @@ ifeq ($(wildcard $(CONFIG_FILE)),)
 $(shell $(SCRIPTS_DIR)/kconfig.sh def)
 endif
 
-.PHONY: all clean run bootloader libc drivers fs kernel objects archives
+.PHONY: all clean run boot libc drivers fs kernel objects archives
 
 all: $(IMG)
 
@@ -50,17 +50,19 @@ archives: objects
 kernel: archives
 	$(MAKE) -C kernel kernel
 
-bootloader:
-	$(MAKE) -C bootloader
+boot:
+	$(MAKE) -C boot
 
-$(IMG): bootloader kernel
-	@echo "  IMG     build/lanex.img"
+$(IMG): boot prepare kernel
+	@echo "  IMG      build/lanex.img"
 	@cat $(BOOT_BIN) $(KERNEL_BIN) > $(IMG)
 	@truncate -s 1440k $(IMG)
 
 run: all
-	@echo "  RUN     build/lanex.img"
+	@echo "  RUN      build/lanex.img"
 	@$(SCRIPTS_DIR)/qemu.sh $(MEM) $(IMG)
+
+prepare: include/lanex/config.h
 
 defconfig:
 	@echo "  DEFCONFIG"
@@ -74,6 +76,9 @@ format:
 	@echo "  FORMAT"
 	@$(SCRIPTS_DIR)/format.sh
 
+include/lanex/config.h: $(CONFIG_FILE)
+	@$(SCRIPTS_DIR)/gen_config.sh .config include/lanex/config.h
+
 clean:
-	@echo "  CLN     build"
+	@echo "  CLN      build"
 	@rm -rf $(BUILD_DIR)

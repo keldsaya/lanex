@@ -20,12 +20,12 @@ objects: $(OBJS)
 archive: $(LIB)
 
 $(LIB): $(OBJS)
-	@echo "  AR      $(REL_LIB)"
+	@echo "  AR       $(REL_LIB)"
 	@mkdir -p $(dir $@)
 	@$(AR) rcs $@ $(OBJS)
 
 $(L_BUILD_DIR)/%.c.o: $(SRC_DIR)/%.c
-	@echo "  CC      libc/$<"
+	@echo "  CC       libc/$<"
 	@mkdir -p $(L_BUILD_DIR)
 	@$(CC) $(INTERNAL_CFLAGS) -c $< -o $@
 

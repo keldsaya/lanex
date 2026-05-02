@@ -10,6 +10,6 @@ all: objects
 objects: $(FULL_OBJS)
 
 $(OBJ_DIR)/%.c.o: %.c
-	@echo "  CC      fs/$(MODULE)/$<"
+	@echo "  CC       fs/$(MODULE)/$<"
 	@mkdir -p $(dir $@)
 	@$(CC) $(FS_CFLAGS) -c $< -o $@
