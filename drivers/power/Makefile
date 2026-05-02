@@ -1,20 +1,22 @@
 MAKEFLAGS += -rR -s
 
-SRC_DIR   = .
-SRCS      = $(wildcard *.c)
-OBJS      = $(SRCS:.c=.c.o)
-FULL_OBJS = $(addprefix $(OBJ_DIR)/,$(OBJS))
+SRC_DIR     = .
+OBJ_DIR     ?= $(BUILD_DIR)/drivers/$(MODULE)
+SRCS        = $(wildcard *.c)
+OBJS        = $(SRCS:.c=.c.o)
+FULL_OBJS   = $(addprefix $(OBJ_DIR)/,$(OBJS))
+
+MSG_PREFIX  = drivers/$(MODULE)
+CFLAGS_USER = $(DRIVERS_CFLAGS)
+EXTRA_DEP   = $(CONFIG_HEADER)
+
+include ../../scripts/rules.mk
 
 .PHONY: all objects clean
 
 all: objects
 
 objects: $(FULL_OBJS)
-
-$(OBJ_DIR)/%.c.o: %.c $(CONFIG_HEADER)
-	@echo "  CC       drivers/$(MODULE)/$<"
-	@mkdir -p $(dir $@)
-	@$(CC) $(DRIVERS_CFLAGS) -c $< -o $@
 
 clean:
 	@echo "  CLN      drivers/$(MODULE)"
