@@ -1,13 +1,14 @@
-SRC_DIR = src
+MAKEFLAGS += -rR -s
+
 DRIVERS_BUILD_DIR = $(BUILD_DIR)/drivers
-CONFIG_HEADER = $(abspath ../include/lanex/config.h)
+CONFIG_HEADER     = $(abspath ../include/lanex/config.h)
 
 -include $(CURDIR)/../.config
 -include $(CURDIR)/Kconfig.include
 
 DRIVERS_DIRS = $(DRIVERS-y)
 
-LIB_DRIVERS = $(DRIVERS_BUILD_DIR)/drivers.a
+LIB_DRIVERS     = $(DRIVERS_BUILD_DIR)/drivers.a
 REL_LIB_DRIVERS = $(subst $(abspath ..)/,,$(LIB_DRIVERS))
 
 INTERNAL_CFLAGS = $(CFLAGS) -I$(abspath ../include) -I../../kernel/include

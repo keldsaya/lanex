@@ -1,7 +1,8 @@
 #!/bin/bash
-
 CONFIG_FILE=$1
 OUTPUT_HEADER=$2
+
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 if [ ! -f "$CONFIG_FILE" ]; then
     echo "Error: .config file not found at $CONFIG_FILE"
@@ -24,4 +25,5 @@ mkdir -p "$(dirname "$OUTPUT_HEADER")"
     echo "#endif"
 } > "$OUTPUT_HEADER"
 
-echo "  GEN     ${OUTPUT_HEADER#$(pwd)/}"
+REL_PATH="${OUTPUT_HEADER#$PROJECT_ROOT/}"
+echo "  GEN      $REL_PATH"

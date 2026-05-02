@@ -1,6 +1,8 @@
-SRC_DIR = .
-SRCS = $(wildcard *.c)
-OBJS = $(SRCS:.c=.c.o)
+MAKEFLAGS += -rR -s
+
+SRC_DIR   = .
+SRCS      = $(wildcard *.c)
+OBJS      = $(SRCS:.c=.c.o)
 FULL_OBJS = $(addprefix $(OBJ_DIR)/,$(OBJS))
 
 .PHONY: all objects clean
@@ -16,4 +18,4 @@ $(OBJ_DIR)/%.c.o: %.c $(CONFIG_HEADER)
 
 clean:
 	@echo "  CLN      drivers/$(MODULE)"
-	rm -rf $(BUILD_DIR)/drivers/$(MODULE)
+	@rm -rf $(BUILD_DIR)/drivers/$(MODULE)

@@ -1,8 +1,10 @@
-LIBC_DIR = $(abspath ../libc)
-DRIVERS_DIR = $(abspath ../drivers)
-FS_DIR = $(abspath ../fs)
-SRC_DIR  = src
-INCLUDE_DIR = $(abspath ../include)
+MAKEFLAGS += -rR -s
+
+LIBC_DIR     = $(abspath ../libc)
+DRIVERS_DIR  = $(abspath ../drivers)
+FS_DIR       = $(abspath ../fs)
+SRC_DIR      = src
+INCLUDE_DIR  = $(abspath ../include)
 
 CONFIG_HEADER = $(INCLUDE_DIR)/lanex/config.h
 
@@ -14,16 +16,15 @@ KERNEL_OBJS = entry.asm.o main.c.o io.c.o \
 OBJS = $(addprefix $(BUILD_DIR)/kernel/, $(KERNEL_OBJS))
 BIN  = $(BUILD_DIR)/kernel.bin
 
-LIBC = $(BUILD_DIR)/libc/libc.a
+LIBC    = $(BUILD_DIR)/libc/libc.a
 DRIVERS = $(BUILD_DIR)/drivers/drivers.a
-FS = $(BUILD_DIR)/fs/fs.a
+FS      = $(BUILD_DIR)/fs/fs.a
 
 LIBS = $(LIBC) $(DRIVERS) $(FS)
 
-INTERNAL_CFLAGS = $(CFLAGS) -I$(INCLUDE_DIR) -I$(LIBC_DIR)/include -Iinclude -I$(DRIVERS_DIR) -I$(FS_DIR)
+INTERNAL_CFLAGS  = $(CFLAGS) -I$(INCLUDE_DIR) -I$(LIBC_DIR)/include \
+                   -Iinclude -I$(DRIVERS_DIR) -I$(FS_DIR)
 INTERNAL_LDFLAGS = $(LDFLAGS) -T ../linker.ld -Wl,--oformat,binary
-
-CONFIG_HEADER = $(abspath ../include/lanex/config.h)
 
 .PHONY: all objects kernel clean
 
@@ -43,7 +44,7 @@ $(BUILD_DIR)/kernel/%.c.o: $(SRC_DIR)/%.c $(CONFIG_HEADER)
 $(BUILD_DIR)/kernel/%.s.o: $(SRC_DIR)/%.s
 	@echo "  ASM      kernel/$<"
 	@mkdir -p $(dir $@)
-	@$(AS) $< -o $@
+	@$(AS) $(ASFLAGS) $< -o $@
 
 $(BUILD_DIR)/kernel/%.asm.o: $(SRC_DIR)/%.asm
 	@echo "  ASM      kernel/$<"
