@@ -1,20 +1,21 @@
 MAKEFLAGS += -rR -s
 
-SRC_DIR   = .
-SRCS      = $(wildcard *.c)
-OBJS      = $(SRCS:.c=.c.o)
-FULL_OBJS = $(addprefix $(OBJ_DIR)/,$(OBJS))
+SRC_DIR     = .
+OBJ_DIR     ?= $(BUILD_DIR)/fs/$(MODULE)
+SRCS        = $(wildcard *.c)
+OBJS        = $(SRCS:.c=.c.o)
+FULL_OBJS   = $(addprefix $(OBJ_DIR)/,$(OBJS))
+
+MSG_PREFIX  = fs/$(MODULE)
+CFLAGS_USER = $(FS_CFLAGS)
+
+include ../../scripts/rules.mk
 
 .PHONY: all objects clean
 
 all: objects
 
 objects: $(FULL_OBJS)
-
-$(OBJ_DIR)/%.c.o: %.c
-	@echo "  CC       fs/$(MODULE)/$<"
-	@mkdir -p $(dir $@)
-	@$(CC) $(FS_CFLAGS) -c $< -o $@
 
 clean:
 	@echo "  CLN      fs/$(MODULE)"
