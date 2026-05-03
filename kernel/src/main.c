@@ -1,12 +1,12 @@
-#include "main.h"
+#include <lanex/main.h>
 #include <lanex/config.h>
-#include "idt.h"
-#include "messages.h"
-#include "pic.h"
-#include "pit.h"
-#include "pmm.h"
-#include "sh.h"
-#include "tty.h"
+#include <lanex/idt.h>
+#include <lanex/messages.h>
+#include <lanex/pic.h>
+#include <lanex/pit.h>
+#include <lanex/pmm.h>
+#include <lanex/sh.h>
+#include <lanex/tty.h>
 #include <stdio.h>
 
 #ifdef CONFIG_DRIVER_RTC

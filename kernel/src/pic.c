@@ -1,4 +1,4 @@
-#include "io.h"
+#include <lanex/io.h>
 
 void pic_remap() {
   outb(0x20, 0x11);

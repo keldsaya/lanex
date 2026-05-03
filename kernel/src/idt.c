@@ -1,6 +1,6 @@
-#include "idt.h"
+#include <lanex/idt.h>
 #include <lanex/config.h>
-#include "messages.h"
+#include <lanex/messages.h>
 
 struct idt_entry idt[256];
 struct idt_ptr idtp;

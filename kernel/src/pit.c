@@ -1,5 +1,5 @@
-#include "pit.h"
-#include "io.h"
+#include <lanex/pit.h>
+#include <lanex/io.h>
 
 static volatile uint32_t tick_count = 0;
 

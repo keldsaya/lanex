@@ -1,4 +1,4 @@
-#include "tty.h"
+#include <lanex/tty.h>
 #include <lanex/config.h>
 #include <string.h>
 
