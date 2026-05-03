@@ -1,5 +1,5 @@
 #include "power.h"
-#include "io.h"
+#include <lanex/io.h>
 
 static inline void local_io_wait() { outb(0x80, 0); }
 

@@ -1,5 +1,5 @@
-#include "messages.h"
-#include "tty.h"
+#include <lanex/messages.h>
+#include <lanex/tty.h>
 #include "vga/vga.h"
 #include <stdio.h>
 

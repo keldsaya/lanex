@@ -1,8 +1,8 @@
 #include "rtc.h"
-#include "io.h"
-#include "messages.h"
-#include "pit.h"
-#include "tty.h"
+#include <lanex/io.h>
+#include <lanex/messages.h>
+#include <lanex/pit.h>
+#include <lanex/tty.h>
 #include <stdio.h>
 
 static volatile uint32_t rtc_tick_count = 0;

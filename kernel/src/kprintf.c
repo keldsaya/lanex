@@ -1,4 +1,4 @@
-#include "tty.h"
+#include <lanex/tty.h>
 #include <stdarg.h>
 #include <stdio.h>
 

@@ -1,6 +1,6 @@
 #include "cursor.h"
 #include "../vga/vga.h"
-#include "io.h"
+#include <lanex/io.h>
 
 void cursor_enable(uint8_t start, uint8_t end) {
   outb(0x3D4, 0x0A);

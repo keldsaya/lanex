@@ -1,13 +1,13 @@
-#include "sh.h"
+#include <lanex/sh.h>
 #include <lanex/config.h>
 #include "keyboard/keyboard.h"
-#include "main.h"
-#include "messages.h"
-#include "pit.h"
-#include "pmm.h"
+#include <lanex/main.h>
+#include <lanex/messages.h>
+#include <lanex/pit.h>
+#include <lanex/pmm.h>
 #include "power/power.h"
 #include "rtc/rtc.h"
-#include "tty.h"
+#include <lanex/tty.h>
 #include <stdio.h>
 #include <string.h>
 
