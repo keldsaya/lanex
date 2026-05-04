@@ -10,7 +10,7 @@
 #include <stdio.h>
 
 #ifdef CONFIG_DRIVER_RTC
-#include "rtc/rtc.h"
+#include <rtc/rtc.h>
 #endif
 
 static uint32_t mem_l;
