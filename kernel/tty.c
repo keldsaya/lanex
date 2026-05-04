@@ -12,10 +12,10 @@
   do {                                                                         \
   } while (0)
 #else
-#include "cursor/cursor.h"
+#include <cursor/cursor.h>
 #endif
 
-#include "vga/vga.h"
+#include <vga/vga.h>
 
 size_t tty_row;
 size_t tty_column;

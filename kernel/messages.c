@@ -1,6 +1,6 @@
 #include <lanex/messages.h>
 #include <lanex/tty.h>
-#include "vga/vga.h"
+#include <vga/vga.h>
 #include <stdio.h>
 
 void kpanic(const char *msg) {

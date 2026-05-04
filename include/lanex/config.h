@@ -9,6 +9,7 @@
 #define CONFIG_DRIVER_ATA 1
 #define CONFIG_DRIVER_POWER 1
 #define CONFIG_DRIVER_RTC 1
+#define CONFIG_FS_PROCFS 1
 #define CONFIG_FS_FAT32 1
 
 /* Disabled configs (n): */

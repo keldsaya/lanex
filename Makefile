@@ -28,7 +28,7 @@ endif
 
 NASM = nasm
 
-CFLAGS  += -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+CFLAGS  += -std=gnu99 -ffreestanding -O2 -Wall -Wextra 
 LDFLAGS += -ffreestanding -O2 -nostdlib
 
 DRIVERS_CFLAGS = $(CFLAGS) -I$(CURDIR)/include -I$(CURDIR)/kernel/include

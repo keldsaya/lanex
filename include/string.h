@@ -4,6 +4,9 @@
 #include <stdint.h>
 
 size_t strlen(const char *str);
+char *strchr(const char *s, int c);
+char *strtok(char *str, const char *delim);
+char *strcat(char *dest, const char *src);
 int strcmp(const char *s1, const char *s2);
 int strncmp(const char *a, const char *b, int n);
 void strcpy(char *dst, const char *src);

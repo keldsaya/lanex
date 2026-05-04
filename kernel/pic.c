@@ -1,3 +1,4 @@
+#include <lanex/pic.h>
 #include <lanex/io.h>
 
 void pic_remap() {

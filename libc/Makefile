@@ -3,7 +3,8 @@ MAKEFLAGS += -rR -s
 SRC_DIR     = src
 OBJ_DIR     = $(BUILD_DIR)/libc
 
-LIBC_OBJS = strlen.c.o strcpy.c.o strcmp.c.o \
+LIBC_OBJS = strtok.c.o strcat.c.o strlen.c.o \
+					 	strcpy.c.o strcmp.c.o strchr.c.o \
             strncmp.c.o itoa.c.o utoa.c.o \
             memset.c.o memcpy.c.o memcmp.c.o
 
@@ -11,7 +12,7 @@ OBJS    = $(addprefix $(OBJ_DIR)/, $(LIBC_OBJS))
 LIB     = $(OBJ_DIR)/libc.a
 REL_LIB = $(subst $(abspath ..)/,,$(LIB))
 
-INTERNAL_CFLAGS = $(CFLAGS) -Iinclude
+INTERNAL_CFLAGS = $(CFLAGS) -I../include
 
 MSG_PREFIX  = libc
 CFLAGS_USER = $(INTERNAL_CFLAGS)

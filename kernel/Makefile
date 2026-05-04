@@ -3,7 +3,7 @@ MAKEFLAGS += -rR -s
 LIBC_DIR     = $(abspath ../libc)
 DRIVERS_DIR  = $(abspath ../drivers)
 FS_DIR       = $(abspath ../fs)
-SRC_DIR      = src
+SRC_DIR      = .
 INCLUDE_DIR  = $(abspath ../include)
 
 CONFIG_HEADER = $(INCLUDE_DIR)/lanex/config.h
@@ -11,7 +11,10 @@ CONFIG_HEADER = $(INCLUDE_DIR)/lanex/config.h
 KERNEL_OBJS = entry.asm.o main.c.o io.c.o \
               interrupts.s.o idt.c.o pic.c.o \
               pit.c.o tty.c.o pmm.c.o \
-              sh.c.o messages.c.o kprintf.c.o
+              messages.c.o kprintf.c.o
+
+SUBDIRS := $(wildcard */)
+SUBDIRS := $(filter-out include/ scripts/., $(SUBDIRS))
 
 OBJ_DIR = $(BUILD_DIR)/kernel
 OBJS    = $(addprefix $(OBJ_DIR)/, $(KERNEL_OBJS))
@@ -33,16 +36,29 @@ EXTRA_DEP   = $(CONFIG_HEADER)
 
 include ../scripts/rules.mk
 
-.PHONY: all objects kernel clean
+BUILTINS := $(addprefix $(OBJ_DIR)/, $(SUBDIRS:%/=%.built-in.o))
+
+.PHONY: all objects kernel clean $(SUBDIRS)
 
 all: kernel
 
-objects: $(OBJS)
+objects: $(OBJS) $(BUILTINS)
 
 kernel: objects $(LIBS)
 	@echo "  LD       $(subst $(abspath ..)/,,$(BIN))"
-	@$(CC) $(INTERNAL_LDFLAGS) -o $(BIN) $(OBJS) $(LIBS) -lgcc
+	@$(CC) $(INTERNAL_LDFLAGS) -o $(BIN) $(OBJS) $(BUILTINS) $(LIBS) -lgcc
+
+$(OBJ_DIR)/%.built-in.o: %
+	@$(MAKE) -C $< \
+		OBJ_DIR=$(abspath $(OBJ_DIR)/$<) \
+		BUILT_IN=$@ \
+		CFLAGS_USER="$(INTERNAL_CFLAGS)" \
+		CONFIG_HEADER=$(CONFIG_HEADER) \
+		objects
 
 clean:
-	@rm -f $(OBJS) $(BIN)
+	@for dir in $(SUBDIRS); do \
+		$(MAKE) -C $$dir clean OBJ_DIR=$(abspath $(OBJ_DIR)/$$dir); \
+	done
+	@rm -f $(OBJS) $(BUILTINS) $(BIN)
 	@rm -f $(CONFIG_HEADER)

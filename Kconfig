@@ -41,6 +41,12 @@ endmenu
 
 menu "File Systems"
 
+config FS_PROCFS
+  bool "PROC FS support"
+  default y
+  help
+    PROC pseudo-file system support
+
 config FS_FAT32
   bool "FAT32 FS support"
   default y
