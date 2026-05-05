@@ -1,6 +1,6 @@
 MAKEFLAGS += -rR -s
 
-SRC_DIR = src
+SRC_DIR = .
 BUILD_DIR ?= ../build
 BOOT_BIN = $(BUILD_DIR)/boot.bin
 
@@ -12,7 +12,7 @@ DEPS     = $(SRC_DIR)/memory.asm $(SRC_DIR)/disk.asm $(SRC_DIR)/gdt.asm
 all: $(BOOT_BIN)
 
 $(BOOT_BIN): $(BOOT_SRC) $(DEPS)
-	@echo "  ASM      boot/src/boot.asm"
+	@echo "  ASM      boot/boot.asm"
 	@mkdir -p $(BUILD_DIR)
 	@$(NASM) -f bin $< -o $@
 

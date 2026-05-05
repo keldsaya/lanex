@@ -134,3 +134,135 @@ void kprintf(const char *fmt, ...) {
 
   va_end(args);
 }
+
+int skprintf(char *buf, const char *fmt, ...) {
+  va_list args;
+  va_start(args, fmt);
+  
+  char *start = buf;
+  
+  while (*fmt) {
+    if (*fmt == '%') {
+      fmt++;
+      switch (*fmt) {
+      case 's': {
+        const char *str = va_arg(args, const char *);
+        while (*str) {
+          *buf++ = *str++;
+        }
+        break;
+      }
+      case 'c': {
+        char c = (char)va_arg(args, int);
+        *buf++ = c;
+        break;
+      }
+      case 'd': {
+        int num = va_arg(args, int);
+        char buffer[12];
+        int idx = 0;
+        
+        if (num < 0) {
+          *buf++ = '-';
+          num = -num;
+        }
+        
+        if (num == 0) {
+          *buf++ = '0';
+        } else {
+          while (num > 0) {
+            buffer[idx++] = '0' + (num % 10);
+            num /= 10;
+          }
+          while (idx > 0) {
+            *buf++ = buffer[--idx];
+          }
+        }
+        break;
+      }
+      case 'u': {
+        unsigned int num = va_arg(args, unsigned int);
+        char buffer[12];
+        int idx = 0;
+        
+        if (num == 0) {
+          *buf++ = '0';
+        } else {
+          while (num > 0) {
+            buffer[idx++] = '0' + (num % 10);
+            num /= 10;
+          }
+          while (idx > 0) {
+            *buf++ = buffer[--idx];
+          }
+        }
+        break;
+      }
+      case 'x': {
+        unsigned int num = va_arg(args, unsigned int);
+        char buffer[12];
+        int idx = 0;
+        
+        if (num == 0) {
+          *buf++ = '0';
+        } else {
+          while (num > 0) {
+            uint8_t digit = num % 16;
+            buffer[idx++] = (digit < 10) ? ('0' + digit) : ('a' + digit - 10);
+            num /= 16;
+          }
+          while (idx > 0) {
+            *buf++ = buffer[--idx];
+          }
+        }
+        break;
+      }
+      case 'X': {
+        unsigned int num = va_arg(args, unsigned int);
+        char buffer[12];
+        int idx = 0;
+        
+        if (num == 0) {
+          *buf++ = '0';
+        } else {
+          while (num > 0) {
+            uint8_t digit = num % 16;
+            buffer[idx++] = (digit < 10) ? ('0' + digit) : ('A' + digit - 10);
+            num /= 16;
+          }
+          while (idx > 0) {
+            *buf++ = buffer[--idx];
+          }
+        }
+        break;
+      }
+      case 'p': {
+        uint32_t ptr = va_arg(args, uint32_t);
+        *buf++ = '0';
+        *buf++ = 'x';
+        
+        for (int i = 7; i >= 0; i--) {
+          uint8_t digit = (ptr >> (i * 4)) & 0x0F;
+          *buf++ = (digit < 10) ? ('0' + digit) : ('a' + digit - 10);
+        }
+        break;
+      }
+      case '%':
+        *buf++ = '%';
+        break;
+      default:
+        *buf++ = '%';
+        *buf++ = *fmt;
+        break;
+      }
+    } else {
+      *buf++ = *fmt;
+    }
+    fmt++;
+  }
+  
+  *buf = '\0';
+  va_end(args);
+  
+  return buf - start;
+}

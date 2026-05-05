@@ -7,6 +7,7 @@ MEM           = 4M
 IMG           = $(BUILD_DIR)/lanex.img
 BOOT_BIN      = $(BUILD_DIR)/boot.bin
 KERNEL_BIN    = $(BUILD_DIR)/kernel.bin
+
 LIB_DRIVERS   = $(BUILD_DIR)/drivers/drivers.a
 LIB_FS        = $(BUILD_DIR)/fs/fs.a
 LIB_LIBC      = $(BUILD_DIR)/libc/libc.a
@@ -31,8 +32,8 @@ NASM = nasm
 CFLAGS  += -std=gnu99 -ffreestanding -O2 -Wall -Wextra 
 LDFLAGS += -ffreestanding -O2 -nostdlib
 
-DRIVERS_CFLAGS = $(CFLAGS) -I$(CURDIR)/include -I$(CURDIR)/kernel/include
-FS_CFLAGS      = $(CFLAGS) -I$(CURDIR)/include -I$(CURDIR)/kernel/include
+DRIVERS_CFLAGS = $(CFLAGS) -I$(CURDIR)/include
+FS_CFLAGS      = $(CFLAGS) -I$(CURDIR)/include 
 
 CONFIG_FILE   = $(CURDIR)/.config
 CONFIG_HEADER = $(CURDIR)/include/lanex/config.h

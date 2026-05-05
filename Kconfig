@@ -41,6 +41,12 @@ endmenu
 
 menu "File Systems"
 
+config FS_VFS
+  bool "VFS support"
+  default y
+  help
+    Virtual file system support
+
 config FS_PROCFS
   bool "PROC FS support"
   default y

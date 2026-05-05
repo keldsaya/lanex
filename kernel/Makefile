@@ -28,7 +28,7 @@ LIBS = $(LIBC) $(DRIVERS) $(FS)
 
 INTERNAL_CFLAGS  = $(CFLAGS) -I$(INCLUDE_DIR) -I$(LIBC_DIR)/include \
                    -Iinclude -I$(DRIVERS_DIR) -I$(FS_DIR)
-INTERNAL_LDFLAGS = $(LDFLAGS) -T ../linker.ld -Wl,--oformat,binary
+INTERNAL_LDFLAGS = $(LDFLAGS) -T ../scripts/linker.ld -Wl,--oformat,binary
 
 MSG_PREFIX  = kernel
 CFLAGS_USER = $(INTERNAL_CFLAGS)
