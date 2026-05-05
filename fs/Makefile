@@ -11,7 +11,7 @@ FS_DIRS = $(FS-y)
 LIB_FS     = $(FS_BUILD_DIR)/fs.a
 REL_LIB_FS = $(subst $(abspath ..)/,,$(LIB_FS))
 
-INTERNAL_CFLAGS = $(CFLAGS) -I$(abspath ../include) -I../kernel/include
+INTERNAL_CFLAGS = $(CFLAGS) -I$(abspath ../include) -I$(CURDIR)
 
 FS_OBJS = $(foreach mod,$(FS_DIRS), \
     $(wildcard $(FS_BUILD_DIR)/$(mod)/*.c.o))

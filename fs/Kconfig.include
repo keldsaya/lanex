@@ -1,3 +1,4 @@
 FS-y =
-FS-$(CONFIG_FS_PROCFS)     += procfs
-FS-$(CONFIG_FS_FAT32)      += fat32
+FS-$(CONFIG_FS_VFS)       += vfs
+FS-$(CONFIG_FS_PROCFS)    += procfs
+FS-$(CONFIG_FS_FAT32)     += fat32

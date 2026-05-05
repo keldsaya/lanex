@@ -31,9 +31,9 @@ start:
   ; jump to protected mode code and switch segment
   jmp 0x08:init_pm   
 
-%include "src/memory.asm"
-%include "src/disk.asm"
-%include "src/gdt.asm"
+%include "memory.asm"
+%include "disk.asm"
+%include "gdt.asm"
 
 bits 32 ; 32 bit mode
 init_pm:
