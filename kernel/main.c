@@ -39,6 +39,7 @@ void kmain(uint32_t mem_low, uint32_t mem_high) {
   pit_init(1000);
   pmm_init(total_memory_kb);
   kmalloc_init();
+
 #ifdef CONFIG_DRIVER_RTC
   rtc_init(1024);
 #endif

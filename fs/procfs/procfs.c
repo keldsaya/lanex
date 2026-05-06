@@ -89,6 +89,7 @@ vfs_inode_t *procfs_mount(void) {
 }
 
 int procfs_readdir(vfs_inode_t *dir, uint32_t index, char *name) {
+
   (void)dir;
   procfs_entry_t *entry = first_entry;
   uint32_t i = 0;
