@@ -23,8 +23,9 @@ BIN     = $(BUILD_DIR)/kernel.bin
 LIBC    = $(BUILD_DIR)/libc/libc.a
 DRIVERS = $(BUILD_DIR)/drivers/drivers.a
 FS      = $(BUILD_DIR)/fs/fs.a
+USER    = $(BUILD_DIR)/user/user.a
 
-LIBS = $(LIBC) $(DRIVERS) $(FS)
+LIBS = $(DRIVERS) $(FS) $(USER) $(LIBC)
 
 INTERNAL_CFLAGS  = $(CFLAGS) -I$(INCLUDE_DIR) -I$(LIBC_DIR)/include \
                    -Iinclude -I$(DRIVERS_DIR) -I$(FS_DIR)
@@ -46,7 +47,8 @@ objects: $(OBJS) $(BUILTINS)
 
 kernel: objects $(LIBS)
 	@echo "  LD       $(subst $(abspath ..)/,,$(BIN))"
-	@$(CC) $(INTERNAL_LDFLAGS) -o $(BIN) $(OBJS) $(BUILTINS) $(LIBS) -lgcc
+	@$(CC) $(INTERNAL_LDFLAGS) -o $(BIN) $(OBJS) $(BUILTINS) \
+		-Wl,--start-group $(LIBS) -Wl,--end-group -lgcc
 
 $(OBJ_DIR)/%.built-in.o: %
 	@$(MAKE) -C $< \

@@ -11,6 +11,7 @@ KERNEL_BIN    = $(BUILD_DIR)/kernel.bin
 LIB_DRIVERS   = $(BUILD_DIR)/drivers/drivers.a
 LIB_FS        = $(BUILD_DIR)/fs/fs.a
 LIB_LIBC      = $(BUILD_DIR)/libc/libc.a
+LIB_USER      = $(BUILD_DIR)/user/user.a
 
 CROSS_CC := $(shell which i686-elf-gcc 2>/dev/null)
 ifneq ($(CROSS_CC),)
@@ -55,12 +56,14 @@ objects:
 	$(MAKE) -C libc objects
 	$(MAKE) -C drivers objects
 	$(MAKE) -C fs objects
+	$(MAKE) -C user objects
 	$(MAKE) -C kernel objects
 
 archives: objects
 	$(MAKE) -C libc archive
 	$(MAKE) -C drivers archive
 	$(MAKE) -C fs archive
+	$(MAKE) -C user archive
 
 kernel: archives
 	$(MAKE) -C kernel kernel
