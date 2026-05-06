@@ -5,8 +5,8 @@
 #include <lanex/pic.h>
 #include <lanex/pit.h>
 #include <lanex/pmm.h>
-#include <lanex/sh.h>
 #include <lanex/tty.h>
+#include <lanex/sh.h>
 #include <vfs/vfs.h>
 #include <procfs/procfs.h>
 #include <stdio.h>
@@ -78,7 +78,7 @@ void kmain(uint32_t mem_low, uint32_t mem_high) {
 #endif
   
   asm volatile("sti");
-  
+ 
   welcome();
   sh_main();
   
