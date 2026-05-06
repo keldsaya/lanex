@@ -34,9 +34,11 @@ typedef struct vfs_file {
 
 void vfs_init(void);
 int vfs_mount(const char *path, vfs_inode_t *root);
+int vfs_readdir(vfs_inode_t *dir, uint32_t index, char *name);
 int vfs_open(const char *path, vfs_file_t **file);
 int vfs_read(vfs_file_t *file, char *buf, uint32_t size);
 int vfs_close(vfs_file_t *file);
 vfs_inode_t *vfs_lookup(vfs_inode_t *parent, const char *name);
+vfs_inode_t *vfs_get_proc_inode(void);
 
 #endif

@@ -28,7 +28,7 @@ USER    = $(BUILD_DIR)/user/user.a
 LIBS = $(DRIVERS) $(FS) $(USER) $(LIBC)
 
 INTERNAL_CFLAGS  = $(CFLAGS) -I$(INCLUDE_DIR) -I$(LIBC_DIR)/include \
-                   -Iinclude -I$(DRIVERS_DIR) -I$(FS_DIR)
+                   -Iinclude -I$(DRIVERS_DIR) -I$(FS_DIR) -I$(SRC_DIR)
 INTERNAL_LDFLAGS = $(LDFLAGS) -T ../scripts/linker.ld -Wl,--oformat,binary
 
 MSG_PREFIX  = kernel
@@ -54,7 +54,7 @@ $(OBJ_DIR)/%.built-in.o: %
 	@$(MAKE) -C $< \
 		OBJ_DIR=$(abspath $(OBJ_DIR)/$<) \
 		BUILT_IN=$@ \
-		CFLAGS_USER="$(INTERNAL_CFLAGS)" \
+		KERNEL_CFLAGS="$(INTERNAL_CFLAGS)" \
 		CONFIG_HEADER=$(CONFIG_HEADER) \
 		objects
 

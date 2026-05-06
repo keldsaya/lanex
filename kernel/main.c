@@ -5,6 +5,7 @@
 #include <lanex/pic.h>
 #include <lanex/pit.h>
 #include <lanex/pmm.h>
+#include <lanex/mm/kmalloc.h>
 #include <lanex/tty.h>
 #include <lanex/sh.h>
 #include <vfs/vfs.h>
@@ -67,10 +68,14 @@ void kmain(uint32_t mem_low, uint32_t mem_high) {
   pic_remap();
   pit_init(1000);
   pmm_init(total_memory_kb);
+  kmalloc_init();
   
 #ifdef CONFIG_FS_VFS
   vfs_init();
   procfs_setup();
+
+  vfs_inode_t *proc_root = procfs_mount();
+  vfs_mount("/proc", proc_root);
 #endif
   
 #ifdef CONFIG_DRIVER_RTC

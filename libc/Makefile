@@ -6,7 +6,8 @@ OBJ_DIR     = $(BUILD_DIR)/libc
 LIBC_OBJS = strtok.c.o strcat.c.o strlen.c.o \
 					 	strcpy.c.o strcmp.c.o strchr.c.o \
             strncmp.c.o itoa.c.o utoa.c.o \
-            memset.c.o memcpy.c.o memcmp.c.o
+            memset.c.o memcpy.c.o memcmp.c.o \
+						strrchr.c.o
 
 OBJS    = $(addprefix $(OBJ_DIR)/, $(LIBC_OBJS))
 LIB     = $(OBJ_DIR)/libc.a
