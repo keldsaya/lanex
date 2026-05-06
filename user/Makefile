@@ -3,8 +3,7 @@ MAKEFLAGS += -rR -s
 USER_BUILD_DIR = $(BUILD_DIR)/user
 CONFIG_HEADER  = $(abspath ../include/lanex/config.h)
 
-USER_DIRS = sh
-
+USER_DIRS = init sh
 LIB_USER     = $(USER_BUILD_DIR)/user.a
 REL_LIB_USER = $(subst $(abspath ..)/,,$(LIB_USER))
 
