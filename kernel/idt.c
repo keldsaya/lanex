@@ -34,8 +34,13 @@ void idt_install() {
     idt_set_gate(i, (uint32_t)isr_wrapper, 0x08, 0x8E);
   }
   idt_set_gate(32, (uint32_t)pit_wrapper, 0x08, 0x8E);
+#ifdef CONFIG_DRIVER_KEYBOARD
   idt_set_gate(33, (uint32_t)keyboard_wrapper, 0x08, 0x8E);
+#endif
+
+#ifdef CONFIG_DRIVER_RTC
   idt_set_gate(40, (uint32_t)rtc_wrapper, 0x08, 0x8E);
+#endif
   asm volatile("lidt (%0)" : : "r"(&idtp));
 }
 
